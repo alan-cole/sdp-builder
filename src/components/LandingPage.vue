@@ -31,48 +31,94 @@
           <label class="full-label" for="field_desktop_image">Desktop</label>
           <input id="field_desktop_image" type="file" ref="fileDesktop" @change="updateBanner" />
         </div>
-        <div>
-          <label class="full-label" for="field_mobile_image">Mobile</label>
-          <input id="field_mobile_image" type="file" ref="fileMobile" @change="updateBanner" />
-        </div>
       </div>
     </div>
-    <!-- Ripple Base Layout -->
+    <!-- Ripple Base Layout (default.vue) -->
     <rpl-base-layout>
       <template slot="header">
+        <rpl-alert-base class="app-preview">Draft only and not yet published</rpl-alert-base>
+        <!-- Tide Alerts -->
         <rpl-site-header v-bind="header" />
       </template>
-      <rpl-page-layout :backgroundGraphic="topGraphic" :heroBackgroundImage="heroBackgroundImage" >
+      <!-- BODY CONTENT (Tide.vue) -->
+      <rpl-page-layout
+        :sidebar="true"
+        :backgroundColor="pageLayoutBackgroundColor"
+        :heroBackgroundImage="heroBackgroundImage"
+        :backgroundGraphic="topGraphic"
+      >
         <template slot="breadcrumbs">
           <rpl-breadcrumbs v-if="controls.showCrumbs" :crumbs="breadcrumbs" />
         </template>
+
         <template slot="aboveContent">
           <rpl-hero-banner v-bind="heroBannerData" class="rpl-site-constrain--on-all" />
+          <rpl-acknowledgement v-if="showAcknowledgement" :text="acknowledgement" theme="standalone" />
         </template>
         <template slot="aboveContentTwo">
-          Hey
+          <!-- Header Components -->
+          <!-- TODO -->
         </template>
+
+        <!-- Body Components -->
+        <!-- TODO -->
+        <rpl-updated-date v-bind="updatedDate"></rpl-updated-date>
+
+        <template slot="sidebar">
+          <!-- TODO -->
+          <div class="app-sidebar" v-if="sidebarComponents">
+            <template v-for="(cmp, index) in sidebarComponents">
+              <component :is="cmp.component" v-bind="cmp.data" :key="`${index}-${cmp.order}`" class="rpl-component-gutter"></component>
+            </template>
+          </div>
+        </template>
+
+        <template slot="belowContent">
+          <rpl-campaign-secondary class="rpl-site-constrain--on-all" v-if="campaignSecondary" v-bind="campaignSecondary" />
+          <tide-content-rating class="rpl-site-constrain--on-all" />
+        </template>
+
       </rpl-page-layout>
+      <!-- / BODY CONTENT -->
+      <template slot="footer">
+        <rpl-site-footer v-bind="footer" />
+      </template>
     </rpl-base-layout>
   </div>
 </template>
 
 <script>
+// default.vue
+import { RplAlertBase } from '@dpc-sdp/ripple-alert'
 import { RplPageLayout, RplBaseLayout } from '@dpc-sdp/ripple-layout'
 import RplSiteHeader from '@dpc-sdp/ripple-site-header'
+import RplSiteFooter from '@dpc-sdp/ripple-site-footer'
+// Tide.vue
+import { RplHeroBanner, RplIntroBanner } from '@dpc-sdp/ripple-hero-banner'
+import { RplAcknowledgement } from '@dpc-sdp/ripple-site-footer'
+import RplUpdatedDate from '@dpc-sdp/ripple-updated-date'
 import RplBreadcrumbs from '@dpc-sdp/ripple-breadcrumbs'
-import { RplHeroBanner } from '@dpc-sdp/ripple-hero-banner'
+import RplCampaignSecondary from '@dpc-sdp/ripple-campaign-secondary'
+import TideContentRating from './TideContentRating'
+// Custom
 import topGraphicSrc from '../assets/img/header-pattern-shape.png'
 import bottomGraphicSrc from '../assets/img/header-pattern-bottom.png'
+import sample from '../assets/img/sample.png'
 
 export default {
   name: 'SdpBuilder',
   components: {
+    RplAlertBase,
     RplBaseLayout,
     RplPageLayout,
     RplBreadcrumbs,
     RplHeroBanner,
-    RplSiteHeader
+    RplSiteHeader,
+    RplSiteFooter,
+    RplAcknowledgement,
+    RplUpdatedDate,
+    RplCampaignSecondary,
+    TideContentRating
   },
   data () {
     return {
@@ -89,14 +135,33 @@ export default {
         showSearch: false,
         showLogout: false
       },
+      footer: {
+        nav: [{"text":"Your Services","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"About VIC Government","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"News","url":"#"},{"text":"Events","url":"#"},{"text":"Connect with us","url":"#","children":[{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"}]}],
+        links: [{"text":"Privacy","url":"#"},{"text":"Disclaimer","url":"#"},{"text":"Terms of use","url":"#"},{"text":"Sitemap","url":"#"},{"text":"Accessibility Statement","url":"#"},{"text":"Help","url":"#"}],
+        copyright: '© Copyright State Government of Victoria',
+        acknowledgement: 'The Victorian Government acknowledges Aboriginal and Torres Strait Islander people as the Traditional Custodians of the land and acknowledges and pays respect to their Elders, past and present.',
+        caption: 'Image credit: This caption is used to describe the image in the hero banner above.',
+        logos: [{"src":"https://via.placeholder.com/112x52","alt":"Max native size","url":"#"},{"src":"https://via.placeholder.com/32x32","alt":"Smaller than max size","url":"#"},{"src":"https://via.placeholder.com/80x200","alt":"Portrait","url":"#"},{"src":"https://via.placeholder.com/200x80","alt":"Landscape","url":"#"}]
+      },
       breadcrumbs: [
         { text: 'Home', url: '#' },
         { text: 'Page', url: '#' }
       ],
+      pageLayoutBackgroundColor: 'grey',
+      showAcknowledgement: true,
+      acknowledgement: 'Hello world!',
+      sidebarComponents: null,
+      updatedDate: { date: '2020-01-01T08:00:00' },
+      campaignSecondary: {
+        title: 'Campaign Secondary Title',
+        summary: 'And campaign summary',
+        link: { text: 'Hello', url: '#' },
+        video: null,
+        image: { src: sample }
+      },
       controls: {
         theme: 'light',
         fileDesktop: '',
-        fileMobile: '',
         showKeyLinks: false,
         showCrumbs: true,
         title: 'Landing Page',
@@ -110,12 +175,6 @@ export default {
         var fileReaderDesktop = new FileReader()
         fileReaderDesktop.onload = () => {this.controls.fileDesktop = fileReaderDesktop.result }
         fileReaderDesktop.readAsDataURL(this.$refs['fileDesktop'].files[0])
-      }
-
-      if (this.$refs['fileMobile'].files && this.$refs['fileMobile'].files.length > 0) {
-        var fileReaderMobile = new FileReader()
-        fileReaderMobile.onload = () => { this.controls.fileMobile = fileReaderMobile.result }
-        fileReaderMobile.readAsDataURL(this.$refs['fileMobile'].files[0])
       }
     }
   },
