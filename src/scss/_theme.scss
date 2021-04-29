@@ -1,0 +1,45 @@
+// Theming variables
+// Overwrites values in Ripple
+@import '~@dpc-sdp/ripple-global/scss/settings/functions';
+
+// $rpl-colors: (
+//   'primary': #292E33,
+//   'dark_primary': #14171A,
+//   'secondary': #414952,
+//   'extra_dark_neutral': #292E33,
+//   'dark_neutral': #414952,
+//   'mid_neutral_1': #D5DAE0,
+//   'mid_neutral_2': #E8EBEE,
+//   'light_neutral': #F7F9FA,
+//   'danger': #af272f,
+//   'warning': #ca4c21,
+//   'success': #009ca6,
+//   'white': #fff,
+//   'black': #000,
+//   'salsared': #B82025,
+//   'salsacsbudget': #00787e,
+//   'salsacsprojectdate': #4a4c50,
+//   'salsacsproduct': #c01d2c,
+//   'salsacsindustry': #004380,
+//   'salsacsstatus': #009aa1,
+// );
+// Here’s the new gradient if necessary: #86C2B2 - #A6D9CD
+
+// $rpl-gradients: (
+//   'primary_gradient': linear-gradient(90deg, #43CE8B 0%, #189D9D 100%),
+//   'primary_gradient_90': linear-gradient(180deg, #43CE8B 0%, #189D9D 100%),
+//   'primary_gradient_0': linear-gradient(0deg, #43CE8B 0%, #189D9D 100%),
+//   'decorative_gradient': linear-gradient(-90deg, #43CE8B 0%, #189D9D 100%),
+//   'decorative_gradient_0': linear-gradient(0deg, #43CE8B 0%, #189D9D 100%),
+//   'decorative_gradient_90': linear-gradient(-180deg, #43CE8B 0%, #189D9D 100%),
+//   'decorative_gradient_180': linear-gradient(90deg, #43CE8B 0%, #189D9D 100%)
+// ) !default;
+
+// Fonts
+// $rpl-font-directory: '../../../src/assets/fonts/';
+// $rpl-fonts: (
+//   'regular': ('Point-Book', 'Arial', 'Helvetica', 'sans-serif'),
+//   'medium': ('Point-SemiBold', 'Arial', 'Helvetica', 'sans-serif'),
+//   'semibold': ('Point-Bold', 'Arial', 'Helvetica', 'sans-serif'),
+//   'bold': ('Point-ExtraBold', 'Arial', 'Helvetica', 'sans-serif')
+// );

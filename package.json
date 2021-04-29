@@ -1,0 +1,33 @@
+{
+  "name": "sdpbuilder",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "docs": "vue-cli-service build; rm -rf docs; mv dist docs; node strip-slash.js",
+    "postinstall": "patch-package"
+  },
+  "dependencies": {
+    "@dpc-sdp/ripple-breadcrumbs": "1.21.2",
+    "@dpc-sdp/ripple-card": "1.21.2",
+    "@dpc-sdp/ripple-grants": "1.21.2",
+    "@dpc-sdp/ripple-hero-banner": "1.21.2",
+    "@dpc-sdp/ripple-layout": "1.21.2",
+    "@dpc-sdp/ripple-markup": "1.21.2",
+    "@dpc-sdp/ripple-responsive-img": "^1.21.2",
+    "@dpc-sdp/ripple-site-header": "1.21.2",
+    "core-js": "^3.11.1",
+    "patch-package": "^6.2.0",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "chokidar": "^3.5.1",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
