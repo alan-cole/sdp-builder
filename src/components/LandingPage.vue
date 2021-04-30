@@ -28,7 +28,7 @@
       </div>
       <div class="field">
         <div>
-          <label class="full-label" for="field_desktop_image">Desktop</label>
+          <label class="full-label" for="field_desktop_image">Hero Banner Image</label>
           <input id="field_desktop_image" type="file" ref="fileDesktop" @change="updateBanner" />
         </div>
       </div>
@@ -42,7 +42,7 @@
       </template>
       <!-- BODY CONTENT (Tide.vue) -->
       <rpl-page-layout
-        :sidebar="true"
+        :sidebar="sidebar"
         :backgroundColor="pageLayoutBackgroundColor"
         :heroBackgroundImage="heroBackgroundImage"
         :backgroundGraphic="topGraphic"
@@ -57,17 +57,43 @@
         </template>
         <template slot="aboveContentTwo">
           <!-- Header Components -->
-          <!-- TODO -->
+          <template v-if="headerComponents">
+            <template v-for="headerComponent in headerComponents">
+              <component
+                :is="headerComponent.component"
+                v-bind="headerComponent.data"
+                :class="headerComponent.class"
+                :key="headerComponent.id"
+                v-on="headerComponent.name === 'rpl-search-form' ? { search: ($event) => { return searchFunc($event, headerComponent.data)} } : {}"
+                v-if="headerComponent && headerComponent.component"
+              ></component>
+            </template>
+          </template>
+          <rpl-campaign-primary v-if="campaignPrimary" v-bind="campaignPrimary" />
         </template>
 
-        <!-- Body Components -->
-        <!-- TODO -->
+        <!-- Landing Page (landing-page/pages/index.vue) -->
+        <rpl-row row-gutter class="app-content tide-content tide-content--landing-page">
+          <template v-if="anchorLinks && anchorLinks.length > 0">
+            <rpl-col cols="full">
+              <rpl-anchor-links title="On this page:" :links="anchorLinks" />
+            </rpl-col>
+          </template>
+          <template v-for="dComponent in bodyComponents" v-if="bodyComponents">
+            <rpl-col cols="full" :colsBp="dComponent.cols" :key="dComponent.id">
+              <component :is="dComponent.component" v-bind="dComponent.data" :class="dComponent.class"></component>
+            </rpl-col>
+          </template>
+          <rpl-col v-if="showTopicTermsAndTags" cols="full">
+            <app-topic-tags :topic="topic" :tags="tags" />
+          </rpl-col>
+        </rpl-row>
+        <!-- / Landing Page (landing-page/pages/index.vue) -->
         <rpl-updated-date v-bind="updatedDate"></rpl-updated-date>
 
         <template slot="sidebar">
-          <!-- TODO -->
-          <div class="app-sidebar" v-if="sidebarComponents">
-            <template v-for="(cmp, index) in sidebarComponents">
+          <div class="app-sidebar" v-if="orderedSidebarComponents">
+            <template v-for="(cmp, index) in orderedSidebarComponents">
               <component :is="cmp.component" v-bind="cmp.data" :key="`${index}-${cmp.order}`" class="rpl-component-gutter"></component>
             </template>
           </div>
@@ -94,41 +120,69 @@ import { RplPageLayout, RplBaseLayout } from '@dpc-sdp/ripple-layout'
 import RplSiteHeader from '@dpc-sdp/ripple-site-header'
 import RplSiteFooter from '@dpc-sdp/ripple-site-footer'
 // Tide.vue
+import { RplRow, RplCol } from '@dpc-sdp/ripple-grid'
 import { RplHeroBanner, RplIntroBanner } from '@dpc-sdp/ripple-hero-banner'
 import { RplAcknowledgement } from '@dpc-sdp/ripple-site-footer'
 import RplUpdatedDate from '@dpc-sdp/ripple-updated-date'
 import RplBreadcrumbs from '@dpc-sdp/ripple-breadcrumbs'
+import RplCampaignPrimary from '@dpc-sdp/ripple-campaign-primary'
 import RplCampaignSecondary from '@dpc-sdp/ripple-campaign-secondary'
 import TideContentRating from './TideContentRating'
+import AppTopicTags from './AppTopicTags'
+import { anchorUtils } from '../libs/anchorlinks.js'
+import RplAnchorLinks from '@dpc-sdp/ripple-anchor-links'
 // Custom
 import topGraphicSrc from '../assets/img/header-pattern-shape.png'
 import bottomGraphicSrc from '../assets/img/header-pattern-bottom.png'
 import sample from '../assets/img/sample.png'
+import sample699x411 from '../assets/img/sample699x411.png'
+// Body Content
+import { RplMarkup } from '@dpc-sdp/ripple-markup'
+
+// Sidebar
+import RplRelatedLinks from '@dpc-sdp/ripple-related-links'
+import RplWhatsNext from '@dpc-sdp/ripple-whats-next'
+import RplSiteSectionNavigation from '@dpc-sdp/ripple-site-section-navigation'
+import RplContact from '@dpc-sdp/ripple-contact'
+import RplShareThis from '@dpc-sdp/ripple-share-this'
 
 export default {
   name: 'SdpBuilder',
   components: {
+    RplRow,
+    RplCol,
     RplAlertBase,
     RplBaseLayout,
     RplPageLayout,
     RplBreadcrumbs,
     RplHeroBanner,
+    RplIntroBanner,
     RplSiteHeader,
     RplSiteFooter,
     RplAcknowledgement,
     RplUpdatedDate,
+    RplCampaignPrimary,
     RplCampaignSecondary,
-    TideContentRating
+    TideContentRating,
+    AppTopicTags,
+    RplAnchorLinks,
+    RplMarkup,
+    RplRelatedLinks,
+    RplWhatsNext,
+    RplSiteSectionNavigation,
+    RplContact,
+    RplShareThis
   },
   data () {
+    const mainMenu = [
+        { text: 'Home', url: '#' },
+        { text: 'About us', url: '#' },
+        { text: 'Contact us', url: '#' }
+      ]
     return {
       publicPath: process.env.BASE_URL,
       header: {
-        links: [
-          { text: 'Home', url: '#' },
-          { text: 'About us', url: '#' },
-          { text: 'Contact us', url: '#' }
-        ],
+        links: mainMenu,
         breakpoint: 992,
         sticky: false,
         hideOnScroll: false,
@@ -147,11 +201,125 @@ export default {
         { text: 'Home', url: '#' },
         { text: 'Page', url: '#' }
       ],
+      sidebar: true,
       pageLayoutBackgroundColor: 'grey',
       showAcknowledgement: true,
       acknowledgement: 'Hello world!',
-      sidebarComponents: null,
+      headerComponents: [
+        {
+          name: 'rpl-intro-banner',
+          component: 'rpl-intro-banner',
+          data: {
+            title: 'My Title',
+            introText: 'Intro banner text',
+            linkHeading: 'Link heading',
+            links: [{ text: 'Home', url: '#' }],
+            showLinks: true,
+            linksType: 'link',
+            icon: 'alert_information'
+          },
+          class: ['rpl-site-constrain--on-all'],
+          id: 'header-1',
+        }
+      ],
+      bodyComponents: [
+        {
+          name: 'rpl-markup',
+          component: 'rpl-markup',
+          data: {
+            html: '<h2>Test</h2><p>Hello world!</p>',
+            childColsBp: null
+          },
+          childCols: null,
+          class: [],
+          cols: null,
+          // ssr: true,
+          id: '1'
+        }
+      ],
+      sidebarComponents: [
+        {
+          name: 'rpl-related-links',
+          component: 'rpl-related-links',
+          order: 101,
+          data: {
+            title: 'Related links',
+            links: [
+              { text: 'Related Link 1', url: '#' },
+              { text: 'DuckDuckGo', url: 'https://duckduckgo.com' }
+            ]
+          }
+        },
+        {
+          name: 'rpl-whats-next',
+          component: 'rpl-whats-next',
+          order: 103,
+          data: {
+            title: 'What\'s next?',
+            links: [
+              { text: 'Whats next 1', url: '#' }
+            ]
+          }
+        },
+        {
+          name: 'rpl-site-section-navigation',
+          component: 'rpl-site-section-navigation',
+          order: 100,
+          data: {
+            menu: mainMenu,
+            title: 'My title',
+            activeLink: '/active'
+          }
+        },
+        {
+          name: 'rpl-contact',
+          component: 'rpl-contact',
+          order: 104,
+          data: {
+            title: 'Contact us',
+            name: 'Name',
+            department: 'Department',
+            postal: 'Postal',
+            address: 'Address',
+            phone: [
+              {
+                title: 'Home',
+                number: '123456789'
+              }
+            ],
+            email: 'email@example.com',
+            social: [
+              {
+                title: 'Social',
+                icon: 'facebook',
+                url: 'https://www.duckduckgo.com'
+              }
+            ]
+          }
+        },
+        {
+          name: 'rpl-share-this',
+          component: 'rpl-share-this',
+          order: 105,
+          data: {
+            title: 'Share this page',
+            url: `https://duckduckgo.com`
+          }
+        }
+      ],
+      showTableOfContents: true,
+      showTopicTermsAndTags: true,
+      topic: { name: 'Topic', path: { alias: '#' } },
+      tags: [{ name: 'Tag A', path: { alias: '#' } }, { name: 'Tag B', path: { alias: '#' } }],
+      displayHeadings: 'showH2AndH3',
       updatedDate: { date: '2020-01-01T08:00:00' },
+      campaignPrimary: {
+        title: 'Campaign Primary Title',
+        summary: 'And campaign summary',
+        link: { text: 'Hello', url: '#' },
+        video: null,
+        image: { src: sample699x411 }
+      },
       campaignSecondary: {
         title: 'Campaign Secondary Title',
         summary: 'And campaign summary',
@@ -204,8 +372,45 @@ export default {
     },
     bottomGraphic () {
       return (this.heroBackgroundImage == null) ? ((process.env.NODE_ENV === 'development') ? bottomGraphicSrc : `img/header-pattern-bottom.png`) : ''
+    },
+    anchorLinks () {
+      if (this.showTableOfContents && this.bodyComponents) {
+        const anchors = []
+        this.bodyComponents.forEach(component => {
+          if (component && component.name && component.data) {
+            switch (component.name) {
+              case 'rpl-markup':
+                if (component.data.html) {
+                  let showSubHeading = false
+                  if (this.displayHeadings && this.displayHeadings === 'showH2AndH3') {
+                    showSubHeading = true
+                  }
+                  anchors.push(...anchorUtils.getAnchorLinks(component.data.html, showSubHeading))
+                }
+                break
+              case 'rpl-accordion':
+                if (component.data.title) {
+                  anchors.push({ text: component.data.title, url: `#${getAnchorLinkName(component.data.title)}` })
+                }
+                break
+            }
+          }
+        })
+        return anchors
+      }
+      return []
+    },
+    pageType () {
+      if (this.page.type) {
+        return this.$tide.getPageTypeTemplate(this.page.type)
+      } else {
+        return false
+      }
+    },
+    orderedSidebarComponents () {
+      return this.sidebarComponents.filter(a => a).sort((a, b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0))
     }
-  }
+  },
 }
 </script>
 
@@ -213,14 +418,22 @@ export default {
 @import '~@dpc-sdp/ripple-global/scss/settings';
 @import '~@dpc-sdp/ripple-global/scss/tools';
 
+body {
+  padding-bottom: 200px;
+}
+
 .controls {
   z-index: 1;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: grey;
+  background-color: rgba(0,0,0, 0.9);
+  color: white;
   padding: 10px;
+  height: 200px;
+  box-sizing: border-box;
+  z-index: 10000;
 
   @include rpl-breakpoint('m') {
     display: flex;
