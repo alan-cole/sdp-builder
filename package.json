@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "docs": "vue-cli-service build; rm -rf docs; mv dist docs; node strip-slash.js",
+    "docs": "vue-cli-service build; rm -rf docs; mv dist docs; node strip-slash.js; cp ./src/assets/img ./docs/img",
     "postinstall": "patch-package"
   },
   "dependencies": {
