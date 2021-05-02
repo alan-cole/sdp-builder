@@ -1,35 +1,127 @@
 <template>
-  <div>
+  <div class="page" :class="{ 'page--controls-hidden': !controls.show }">
     <!-- Controls -->
     <div class="controls">
-      <div class="field">
-        <select v-model="controls.theme">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
-        <div>
-          <label for="field_show_links">Show Links</label>
-          <input id="field_show_links" type="checkbox" v-model="controls.showKeyLinks">
+      <button class="controls__toggle" @click="controls.show = !controls.show">{{ controls.show ? 'Hide' : 'Show'}} Toolbar</button>
+      <div v-if="controls.show">
+        <div class="controls__tabs">
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'page-header'}"@click="controls.activePanel = 'page-header'">Page Header</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'body-content'}"@click="controls.activePanel = 'body-content'">Body Content</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'header-content'}"@click="controls.activePanel = 'header-content'">Header Content</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'campaigns'}"@click="controls.activePanel = 'campaigns'">Campaigns</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'sidebar'}"@click="controls.activePanel = 'sidebar'">Sidebar</button>
         </div>
-        <div>
-          <label for="field_show_breadcrumbs">Show Breadcrumbs</label>
-          <input id="field_show_breadcrumbs" type="checkbox" v-model="controls.showCrumbs">
+        <div class="controls__panel" v-if="controls.activePanel === 'page-header'">
+          <div class="field">
+            <label>
+              <span>Hero Banner Theme</span>
+              <select v-model="controls.pageHeader.theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </label>
+            <div>
+              <label>
+                <span>Show Links</span>
+                <input type="checkbox" v-model="controls.pageHeader.showKeyLinks">
+              </label>
+            </div>
+            <div>
+              <label>
+                <span>Show Breadcrumbs</span>
+                <input type="checkbox" v-model="controls.pageHeader.showCrumbs">
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <div>
+              <label>
+                <span>Title</span>
+                <input type="text" v-model="controls.pageHeader.title">
+              </label>
+            </div>
+            <div>
+              <label>
+                <span>Intro Text</span>
+                <input type="text" v-model="controls.pageHeader.introText">
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <div>
+              <label>
+                <span>Hero Banner Image</span>
+                <input type="file" ref="fileDesktop" @change="updateBanner" />
+              </label>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div>
-          <label class="full-label" for="field_title">Title</label>
-          <input id="field_title" type="text" v-model="controls.title">
+        <div class="controls__panel" v-if="controls.activePanel === 'body-content'">
+          <div class="field">
+            <label>
+              <span>Show Table of Content?</span>
+              <input type="checkbox" v-model="controls.bodyContent.showTableOfContents">
+            </label>
+            <label>
+              <span>Show topic term and tags?</span>
+              <input type="checkbox" v-model="controls.bodyContent.showTopicTermsAndTags">
+            </label>
+          </div>
+          <div class="field">
+            <label>
+              <span>Add Body Component</span>
+              <select v-model="controls.bodyContent.addBodyComponent">
+                <option value="basic_text">basic_text</option>
+                <option disabled value="accordion">accordion</option>
+                <option disabled value="card_keydates">card_keydates</option>
+                <option disabled value="call_to_action">call_to_action</option>
+                <option disabled value="embedded_webform">embedded_webform</option>
+                <option disabled value="featured_news">featured_news</option>
+                <option disabled value="news_listing">news_listing</option>
+                <option disabled value="media_gallery">media_gallery</option>
+                <option disabled value="card_carousel">card_carousel</option>
+                <option disabled value="latest_events">latest_events</option>
+                <option disabled value="data_driven_component">data_driven_component</option>
+                <option disabled value="daily_update">daily_update</option>
+                <option disabled value="complex_image">complex_image</option>
+                <option disabled value="compact_card_collection">compact_card_collection</option>
+                <option disabled value="timelines">timelines</option>
+                <option disabled value="user_authentication_block">user_authentication_block</option>
+                <option disabled value="data_table">data_table</option>
+                <option disabled value="form_embed_openforms">form_embed_openforms</option>
+                <option disabled value="navigation_card">navigation_card</option>
+                <option value="promotion_card">promotion_card</option>
+              </select>
+            </label>
+            <button @click="addBodyComponent">Add Component</button>
+            <fieldset v-for="(bodyComponent, bci) in controls.bodyContent.components" :key="`fieldset-${bci}`">
+              <legend>{{ bodyComponent.type }}</legend>
+              <div v-for="(bodyComponentField, bcfi) in bodyComponent.fields" :key="`fieldset-${bci}-field-${bcfi}`">
+                <label>
+                  <span>{{ bodyComponentField.name }}</span>
+                  <input v-if="bodyComponentField.type === 'input.text'" type="text" v-model="bodyComponentField.data" />
+                  <input v-if="bodyComponentField.type === 'input.checkbox'" type="checkbox" v-model="bodyComponentField.data" />
+                  <textarea v-if="bodyComponentField.type === 'textarea'" type="text" v-model="bodyComponentField.data"></textarea>
+                  <select v-if="bodyComponentField.type === 'select'" type="checkbox" v-model="bodyComponentField.data">
+                    <option v-for="(options, fieldoptionindex) in bodyComponentField.options" :value="options" :key="`fieldset-${bci}-field-${bcfi}-option-${fieldoptionindex}`">{{ options }}</option>
+                  </select>
+                </label>
+              </div>
+              <button @click="deleteBodyComponent(bci)">Delete Component</button>
+            </fieldset>
+          </div>
         </div>
-        <div>
-          <label class="full-label" for="field_intro_text">Intro Text</label>
-          <input id="field_intro_text" type="text" v-model="controls.introText">
-        </div>
-      </div>
-      <div class="field">
-        <div>
-          <label class="full-label" for="field_desktop_image">Hero Banner Image</label>
-          <input id="field_desktop_image" type="file" ref="fileDesktop" @change="updateBanner" />
+        <div class="controls__panel" v-if="controls.activePanel === 'header-content'">Header content coming soon</div>
+        <div class="controls__panel" v-if="controls.activePanel === 'campaigns'">Campaigns coming soon</div>
+        <div class="controls__panel" v-if="controls.activePanel === 'sidebar'">
+          <div class="field">
+            <div>
+              <label>
+                <span>Show Sidebar (this isn't a CMS option)</span>
+                <input type="checkbox" v-model="controls.sidebar.show">
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -42,13 +134,13 @@
       </template>
       <!-- BODY CONTENT (Tide.vue) -->
       <rpl-page-layout
-        :sidebar="sidebar"
+        :sidebar="controls.sidebar.show"
         :backgroundColor="pageLayoutBackgroundColor"
         :heroBackgroundImage="heroBackgroundImage"
         :backgroundGraphic="topGraphic"
       >
         <template slot="breadcrumbs">
-          <rpl-breadcrumbs v-if="controls.showCrumbs" :crumbs="breadcrumbs" />
+          <rpl-breadcrumbs v-if="controls.pageHeader.showCrumbs" :crumbs="breadcrumbs" />
         </template>
 
         <template slot="aboveContent">
@@ -84,7 +176,7 @@
               <component :is="dComponent.component" v-bind="dComponent.data" :class="dComponent.class"></component>
             </rpl-col>
           </template>
-          <rpl-col v-if="showTopicTermsAndTags" cols="full">
+          <rpl-col v-if="controls.bodyContent.showTopicTermsAndTags" cols="full">
             <app-topic-tags :topic="topic" :tags="tags" />
           </rpl-col>
         </rpl-row>
@@ -131,6 +223,9 @@ import TideContentRating from './TideContentRating'
 import AppTopicTags from './AppTopicTags'
 import { anchorUtils } from '../libs/anchorlinks.js'
 import RplAnchorLinks from '@dpc-sdp/ripple-anchor-links'
+import {
+  RplCardPromo
+} from '@dpc-sdp/ripple-card'
 // Custom
 import topGraphicSrc from '../assets/img/header-pattern-shape.png'
 import bottomGraphicSrc from '../assets/img/header-pattern-bottom.png'
@@ -171,7 +266,8 @@ export default {
     RplWhatsNext,
     RplSiteSectionNavigation,
     RplContact,
-    RplShareThis
+    RplShareThis,
+    RplCardPromo
   },
   data () {
     const mainMenu = [
@@ -181,6 +277,17 @@ export default {
       ]
     return {
       publicPath: process.env.BASE_URL,
+      cardColsSetting: {
+        wide: {
+          m: 6,
+          l: 4,
+          xxxl: 3
+        },
+        narrow: {
+          m: 6,
+          xxxl: 4
+        }
+      },
       header: {
         links: mainMenu,
         breakpoint: 992,
@@ -201,7 +308,6 @@ export default {
         { text: 'Home', url: '#' },
         { text: 'Page', url: '#' }
       ],
-      sidebar: true,
       pageLayoutBackgroundColor: 'grey',
       showAcknowledgement: true,
       acknowledgement: 'Hello world!',
@@ -220,21 +326,6 @@ export default {
           },
           class: ['rpl-site-constrain--on-all'],
           id: 'header-1',
-        }
-      ],
-      bodyComponents: [
-        {
-          name: 'rpl-markup',
-          component: 'rpl-markup',
-          data: {
-            html: '<h2>Test</h2><p>Hello world!</p>',
-            childColsBp: null
-          },
-          childCols: null,
-          class: [],
-          cols: null,
-          // ssr: true,
-          id: '1'
         }
       ],
       sidebarComponents: [
@@ -307,8 +398,6 @@ export default {
           }
         }
       ],
-      showTableOfContents: true,
-      showTopicTermsAndTags: true,
       topic: { name: 'Topic', path: { alias: '#' } },
       tags: [{ name: 'Tag A', path: { alias: '#' } }, { name: 'Tag B', path: { alias: '#' } }],
       displayHeadings: 'showH2AndH3',
@@ -316,24 +405,52 @@ export default {
       campaignPrimary: {
         title: 'Campaign Primary Title',
         summary: 'And campaign summary',
-        link: { text: 'Hello', url: '#' },
+        link: { text: 'Read more', url: '#' },
         video: null,
         image: { src: sample699x411 }
       },
       campaignSecondary: {
         title: 'Campaign Secondary Title',
         summary: 'And campaign summary',
-        link: { text: 'Hello', url: '#' },
+        link: { text: 'See more', url: '#' },
         video: null,
         image: { src: sample }
       },
       controls: {
-        theme: 'light',
-        fileDesktop: '',
-        showKeyLinks: false,
-        showCrumbs: true,
-        title: 'Landing Page',
-        introText: 'Aliqua reprehenderit laborum ad consequat proident aliquip est consectetur aute ut dolor esse proident et enim ad.'
+        show: true,
+        activePanel: 'page-header',
+        pageHeader: {
+          theme: 'light',
+          fileDesktop: '',
+          showKeyLinks: false,
+          showCrumbs: true,
+          title: 'Landing Page',
+          introText: 'Aliqua reprehenderit laborum ad consequat proident aliquip est consectetur aute ut dolor esse proident et enim ad.'
+        },
+        bodyContent: {
+          showTableOfContents: true,
+          showTopicTermsAndTags: true,
+          addBodyComponent: 'basic_text',
+          fieldSchemas: {
+            'basic_text': [
+              { name: 'html', type: 'textarea', data: '' }
+            ],
+            'promotion_card': [
+              { name: 'Link', type: 'select', options: ['Demo A', 'Demo B', 'Demo C'], data: 'Demo A' },
+              { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' },
+              { name: 'Show supplemental info', type: 'input.checkbox', data: true }
+            ],
+          },
+          components: [{
+            type: 'basic_text',
+            fields: [{ name: 'html', type: 'textarea', data: '<h2>Body Content Heading</h2>\n<p>Pariatur dolore elit sunt esse.</p>\n<ul>\n  <li>Aute nulla commodo magna.</li>\n  <li>Deserunt commodo occaecat eu.</li>\n</ul>' }]
+          }]
+        },
+        headerContent: {},
+        campaigns: {},
+        sidebar: {
+          show: true,
+        },
       }
     }
   },
@@ -341,16 +458,37 @@ export default {
     updateBanner () {
       if (this.$refs['fileDesktop'].files && this.$refs['fileDesktop'].files.length > 0) {
         var fileReaderDesktop = new FileReader()
-        fileReaderDesktop.onload = () => {this.controls.fileDesktop = fileReaderDesktop.result }
+        fileReaderDesktop.onload = () => {this.controls.pageHeader.fileDesktop = fileReaderDesktop.result }
         fileReaderDesktop.readAsDataURL(this.$refs['fileDesktop'].files[0])
       }
+    },
+    addBodyComponent () {
+      this.controls.bodyContent.components.push({
+        type: this.controls.bodyContent.addBodyComponent,
+        fields: JSON.parse(JSON.stringify(this.controls.bodyContent.fieldSchemas[this.controls.bodyContent.addBodyComponent]))
+      })
+    },
+    deleteBodyComponent (removeIndex) {
+      this.controls.bodyContent.components.splice(removeIndex, 1)
+    },
+    getCols (cols) {
+      if (cols) {
+        if (this.controls.sidebar.show && cols.narrow) {
+          return cols.narrow
+        }
+        if (cols.wide) {
+          return cols.wide
+        }
+        return cols
+      }
+      return null
     }
   },
   computed: {
     heroBannerData () {
       return {
-        title: this.controls.title,
-        introText: this.controls.introText,
+        title: this.controls.pageHeader.title,
+        introText: this.controls.pageHeader.introText,
         linkHeading: 'Want to know more about...',
         links: [
           { text: 'First journey based link', url: '#' },
@@ -359,13 +497,13 @@ export default {
           { text: 'Fourth journey based link', url: '#' }
         ],
         moreLink: { text: 'See more', url: '#' },
-        theme: this.controls.theme,
-        showLinks: this.controls.showKeyLinks,
+        theme: this.controls.pageHeader.theme,
+        showLinks: this.controls.pageHeader.showKeyLinks,
         backgroundGraphic: this.bottomGraphic
       }
     },
     heroBackgroundImage () {
-      return (this.controls.fileDesktop) ? { src: this.controls.fileDesktop } : null
+      return (this.controls.pageHeader.fileDesktop) ? { src: this.controls.pageHeader.fileDesktop } : null
     },
     topGraphic () {
       return (process.env.NODE_ENV === 'development') ? topGraphicSrc : `img/header-pattern-shape.png`
@@ -374,7 +512,7 @@ export default {
       return (this.heroBackgroundImage == null) ? ((process.env.NODE_ENV === 'development') ? bottomGraphicSrc : `img/header-pattern-bottom.png`) : ''
     },
     anchorLinks () {
-      if (this.showTableOfContents && this.bodyComponents) {
+      if (this.controls.bodyContent.showTableOfContents && this.bodyComponents) {
         const anchors = []
         this.bodyComponents.forEach(component => {
           if (component && component.name && component.data) {
@@ -400,15 +538,71 @@ export default {
       }
       return []
     },
-    pageType () {
-      if (this.page.type) {
-        return this.$tide.getPageTypeTemplate(this.page.type)
-      } else {
-        return false
-      }
-    },
     orderedSidebarComponents () {
       return this.sidebarComponents.filter(a => a).sort((a, b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0))
+    },
+    bodyComponents () {
+      return this.controls.bodyContent.components.map((comp, idx) => {
+        let rtn = {}
+        if (comp.type === 'basic_text') {
+          const data = {}
+          comp.fields.forEach(field => {
+            data[field.name] = field.data
+          })
+          rtn = {
+            name: 'rpl-markup',
+            component: 'rpl-markup',
+            data: {
+              ...data,
+              childColsBp: null
+            },
+            childCols: null,
+            class: [],
+            cols: null,
+            // ssr: true,
+            id: `bodycomp-${idx}`
+          }
+        } else if (comp.type === 'promotion_card') {
+          const data = {}
+          if (comp.fields[0].data === 'Demo A') {
+            data.title = 'Demo A'
+            data.link = { text: '', url: '#content-a'}
+            data.summary = 'Lorem ipsum in esse nostrud magna pariatur sunt in qui reprehenderit et eu exercitation officia qui sunt esse esse ad deserunt.'
+            data.image = { src: sample }
+          }
+          if (comp.fields[0].data === 'Demo B') {
+            data.title = 'Demo B Content example'
+            data.link = { text: '', url: '#content-b'}
+            data.summary = 'Lorem ipsum quis dolor velit et proident velit elit mollit occaecat aute aliquip magna quis exercitation excepteur sunt amet voluptate dolore sint.'
+            data.image = { src: sample }
+            data.dateStart = '2022-01-01T08:00:00'
+            data.dateEnd = '2022-11-13T08:00:00'
+            data.contentType = 'event'
+          }
+          if (comp.fields[0].data === 'Demo C') {
+            data.title = 'Demo C extra large content example'
+            data.link = { text: '', url: '#content-c'}
+            data.summary = 'Dolore deserunt tempor do magna irure nisi ut laborum consequat incididunt duis duis proident ea sit adipisicing do est officia labore ullamco et cupidatat aute nisi eu esse magna irure veniam adipisicing do dolore ex aute sint laboris dolore tempor dolor enim sit esse anim ut ex sit nostrud in id enim enim occaecat nostrud in labore quis consequat eiusmod occaecat exercitation anim ut excepteur excepteur dolor quis sunt ut ut cupidatat ex non velit ea cupidatat dolore eiusmod in ut magna cupidatat pariatur officia consectetur aute reprehenderit pariatur ex culpa nisi esse fugiat ullamco ex nisi est elit in voluptate do sed amet qui anim dolore ea deserunt qui qui in qui consequat incididunt quis aute aliqua quis do proident eiusmod non dolor nostrud aliquip excepteur fugiat exercitation culpa nulla ea reprehenderit tempor minim officia ea est nulla sint sunt ea adipisicing aliquip cillum non non anim nulla duis eiusmod proident voluptate sint.'
+            data.image = { src: sample }
+            data.topic = 'Demo C Topic'
+          }
+          data.displayStyle = comp.fields[1].data
+          data.showMeta = comp.fields[2].data
+          rtn = {
+            name: 'rpl-card-promo',
+            component: 'rpl-card-promo',
+            data: {
+              ...data
+            },
+            childCols: null,
+            class: [],
+            cols: this.getCols(this.cardColsSetting),
+            // ssr: true,
+            id: `bodycomp-${idx}`
+          }
+        }
+        return rtn
+      })
     }
   },
 }
@@ -418,29 +612,60 @@ export default {
 @import '~@dpc-sdp/ripple-global/scss/settings';
 @import '~@dpc-sdp/ripple-global/scss/tools';
 
-body {
-  padding-bottom: 200px;
+.page {
+  padding-bottom: 400px;
+
+  &--controls-hidden {
+    padding-bottom: 0;
+  }
 }
 
 .controls {
-  z-index: 1;
+  overflow: scroll;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background-color: rgba(0,0,0, 0.9);
   color: white;
-  padding: 10px;
-  height: 200px;
+  height: 400px;
   box-sizing: border-box;
   z-index: 10000;
 
-  @include rpl-breakpoint('m') {
-    display: flex;
+  .page--controls-hidden & {
+    height: auto;
+    text-align: right;
+    background-color: transparent;
+    overflow: auto;
   }
 
-  .full-label {
-    display: block;
+  &__tabs {
+    @include rpl-breakpoint('m') {
+      display: flex;
+    }
+  }
+
+  &__tab {
+    border: 0;
+    background-color: white;
+
+    &--active {
+      background-color: lime;
+    }
+  }
+
+  &__panel {
+    padding: 10px;
+
+    @include rpl-breakpoint('m') {
+      display: flex;
+    }
+  }
+
+  label {
+    span {
+      display: block;
+    }
   }
 
   .field {
@@ -451,6 +676,21 @@ body {
 
     input {
       max-width: 200px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+  }
+
+  &__toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    .page--controls-hidden & {
+      position: relative;
     }
   }
 }
