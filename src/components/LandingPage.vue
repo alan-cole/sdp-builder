@@ -37,13 +37,13 @@
             <div>
               <label>
                 <span>Title</span>
-                <input type="text" v-model="controls.pageHeader.title">
+                <input type="text" v-model="controls.pageHeader.title" />
               </label>
             </div>
             <div>
               <label>
                 <span>Intro Text</span>
-                <input type="text" v-model="controls.pageHeader.introText">
+                <input type="text" v-model="controls.pageHeader.introText" />
               </label>
             </div>
           </div>
@@ -51,7 +51,8 @@
             <div>
               <label>
                 <span>Hero Banner Image</span>
-                <input type="file" ref="fileDesktop" @change="updateBanner" />
+                <input type="file" ref="heroBannerImg" @change="addImage(controls.pageHeader, 'fileDesktop', 'heroBannerImg')" />
+                <button @click="removeImage(controls.pageHeader, 'fileDesktop', 'heroBannerImg')">Remove Image</button>
               </label>
             </div>
           </div>
@@ -112,7 +113,68 @@
           </div>
         </div>
         <div class="controls__panel" v-if="controls.activePanel === 'header-content'">Header content coming soon</div>
-        <div class="controls__panel" v-if="controls.activePanel === 'campaigns'">Campaigns coming soon</div>
+        <div class="controls__panel" v-if="controls.activePanel === 'campaigns'">
+          <div class="field">
+            <fieldset>
+              <legend>Campaign Primary</legend>
+              <label>
+                <span>Show Campaign Primary Block</span>
+                <input type="checkbox" v-model="controls.campaigns.primary.show" />
+              </label>
+              <label>
+                <span>Title</span>
+                <input type="text" v-model="controls.campaigns.primary.title" />
+              </label>
+              <label>
+                <span>Body</span>
+                <input type="text" v-model="controls.campaigns.primary.summary" />
+              </label>
+              <label>
+                <span>CTA Text</span>
+                <input type="text" v-model="controls.campaigns.primary.link.text" />
+              </label>
+              <label>
+                <span>CTA URL</span>
+                <input type="text" v-model="controls.campaigns.primary.link.url" />
+              </label>
+              <label>
+                <span>Featured Image</span>
+                <input type="file" ref="campaignPrimaryImg" @change="addImage(controls.campaigns.primary, 'image', 'campaignPrimaryImg')" />
+                <button @click="removeImage(controls.campaigns.primary, 'image', 'campaignPrimaryImg')">Remove Image</button>
+              </label>
+            </fieldset>
+          </div>
+          <div class="field">
+            <fieldset>
+              <legend>Campaign Secondary</legend>
+              <label>
+                <span>Show Campaign Secondary Block</span>
+                <input type="checkbox" v-model="controls.campaigns.secondary.show" />
+              </label>
+              <label>
+                <span>Title</span>
+                <input type="text" v-model="controls.campaigns.secondary.title" />
+              </label>
+              <label>
+                <span>Body</span>
+                <input type="text" v-model="controls.campaigns.secondary.summary" />
+              </label>
+              <label>
+                <span>CTA Text</span>
+                <input type="text" v-model="controls.campaigns.secondary.link.text" />
+              </label>
+              <label>
+                <span>CTA URL</span>
+                <input type="text" v-model="controls.campaigns.secondary.link.url" />
+              </label>
+              <label>
+                <span>Featured Image</span>
+                <input type="file" ref="campaignSecondaryImg" @change="addImage(controls.campaigns.secondary, 'image', 'campaignSecondaryImg')" />
+                <button @click="removeImage(controls.campaigns.secondary, 'image', 'campaignSecondaryImg')">Remove Image</button>
+              </label>
+            </fieldset>
+          </div>
+        </div>
         <div class="controls__panel" v-if="controls.activePanel === 'sidebar'">
           <div class="field">
             <div>
@@ -206,6 +268,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 // default.vue
 import { RplAlertBase } from '@dpc-sdp/ripple-alert'
 import { RplPageLayout, RplBaseLayout } from '@dpc-sdp/ripple-layout'
@@ -402,20 +465,6 @@ export default {
       tags: [{ name: 'Tag A', path: { alias: '#' } }, { name: 'Tag B', path: { alias: '#' } }],
       displayHeadings: 'showH2AndH3',
       updatedDate: { date: '2020-01-01T08:00:00' },
-      campaignPrimary: {
-        title: 'Campaign Primary Title',
-        summary: 'And campaign summary',
-        link: { text: 'Read more', url: '#' },
-        video: null,
-        image: { src: sample699x411 }
-      },
-      campaignSecondary: {
-        title: 'Campaign Secondary Title',
-        summary: 'And campaign summary',
-        link: { text: 'See more', url: '#' },
-        video: null,
-        image: { src: sample }
-      },
       controls: {
         show: true,
         activePanel: 'page-header',
@@ -447,7 +496,24 @@ export default {
           }]
         },
         headerContent: {},
-        campaigns: {},
+        campaigns: {
+          primary: {
+            show: true,
+            title: 'Campaign Primary Title',
+            summary: 'And campaign summary',
+            link: { text: 'Read more', url: '#' },
+            video: null,
+            image: sample699x411
+          },
+          secondary: {
+            show: true,
+            title: 'Campaign Secondary Title',
+            summary: 'And campaign summary',
+            link: { text: 'See more', url: '#' },
+            video: null,
+            image: sample
+          }
+        },
         sidebar: {
           show: true,
         },
@@ -455,12 +521,16 @@ export default {
     }
   },
   methods: {
-    updateBanner () {
-      if (this.$refs['fileDesktop'].files && this.$refs['fileDesktop'].files.length > 0) {
+    addImage (obj, key, ref) {
+      if (this.$refs[ref].files && this.$refs[ref].files.length > 0) {
         var fileReaderDesktop = new FileReader()
-        fileReaderDesktop.onload = () => {this.controls.pageHeader.fileDesktop = fileReaderDesktop.result }
-        fileReaderDesktop.readAsDataURL(this.$refs['fileDesktop'].files[0])
+        fileReaderDesktop.onload = () => { Vue.set(obj, key, fileReaderDesktop.result) }
+        fileReaderDesktop.readAsDataURL(this.$refs[ref].files[0])
       }
+    },
+    removeImage (obj, key, ref) {
+      Vue.set(obj, key, '')
+      this.$refs[ref].value = null
     },
     addBodyComponent () {
       this.controls.bodyContent.components.push({
@@ -482,6 +552,32 @@ export default {
         return cols
       }
       return null
+    },
+    getCampaignDataFromControl (campaignControl) {
+      if (campaignControl.show) {
+        const rtn = {}
+        if (campaignControl.title) {
+          rtn.title = campaignControl.title
+        }
+        if (campaignControl.summary) {
+          rtn.summary = campaignControl.summary
+        }
+        if (campaignControl.link && (campaignControl.link.text || campaignControl.link.url)) {
+          rtn.link = {}
+          if (campaignControl.link.text) {
+            rtn.link.text = campaignControl.link.text
+          }
+          if (campaignControl.link.url) {
+            rtn.link.url = campaignControl.link.url
+          }
+        }
+        if (campaignControl.image) {
+          rtn.image = { src: campaignControl.image }
+        }
+        return rtn
+      } else {
+        return false
+      }
     }
   },
   computed: {
@@ -540,6 +636,12 @@ export default {
     },
     orderedSidebarComponents () {
       return this.sidebarComponents.filter(a => a).sort((a, b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0))
+    },
+    campaignPrimary () {
+      return this.getCampaignDataFromControl(this.controls.campaigns.primary)
+    },
+    campaignSecondary () {
+      return this.getCampaignDataFromControl(this.controls.campaigns.secondary)
     },
     bodyComponents () {
       return this.controls.bodyContent.components.map((comp, idx) => {
