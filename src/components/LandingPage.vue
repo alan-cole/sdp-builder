@@ -14,47 +14,54 @@
         <div class="controls__panel" v-if="controls.activePanel === 'page-header'">
           <div class="field">
             <label>
-              <span>Hero Banner Theme</span>
+              <span>Page title</span>
+              <input type="text" v-model="controls.pageHeader.title" />
+            </label>
+            <label>
+              <span>Introduction text</span>
+              <textarea v-model="controls.pageHeader.introText" />
+            </label>
+            <label>
+              <span>Key journeys (Show Links)</span>
+              <input type="checkbox" v-model="controls.pageHeader.showKeyLinks">
+            </label>
+          </div>
+          <div class="field">
+            <label>
+              <span>Show Breadcrumbs</span>
+              <input type="checkbox" v-model="controls.pageHeader.showCrumbs">
+            </label>
+            <label>
+              <span>Hero Image</span>
+              <input type="file" ref="heroBannerImg" @change="addImage(controls.pageHeader, 'fileDesktop', 'heroBannerImg')" />
+              <button @click="removeImage(controls.pageHeader, 'fileDesktop', 'heroBannerImg')">Remove Image</button>
+            </label>
+            <label>
+              <span>Hero image theme</span>
               <select v-model="controls.pageHeader.theme">
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
               </select>
             </label>
-            <div>
-              <label>
-                <span>Show Links</span>
-                <input type="checkbox" v-model="controls.pageHeader.showKeyLinks">
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>Show Breadcrumbs</span>
-                <input type="checkbox" v-model="controls.pageHeader.showCrumbs">
-              </label>
-            </div>
-          </div>
-          <div class="field">
-            <div>
-              <label>
-                <span>Title</span>
-                <input type="text" v-model="controls.pageHeader.title" />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>Intro Text</span>
-                <input type="text" v-model="controls.pageHeader.introText" />
-              </label>
-            </div>
-          </div>
-          <div class="field">
-            <div>
-              <label>
-                <span>Hero Banner Image</span>
-                <input type="file" ref="heroBannerImg" @change="addImage(controls.pageHeader, 'fileDesktop', 'heroBannerImg')" />
-                <button @click="removeImage(controls.pageHeader, 'fileDesktop', 'heroBannerImg')">Remove Image</button>
-              </label>
-            </div>
+            <label>
+              <span>Show Hero image caption</span>
+              <input type="checkbox" v-model="controls.pageHeader.showHeroImageCaption">
+            </label>
+            <label>
+              <span>Hero Logo</span>
+              <input type="file" ref="heroLogoImg" @change="addImage(controls.pageHeader, 'logo', 'heroLogoImg')" />
+              <button @click="removeImage(controls.pageHeader, 'logo', 'heroLogoImg')">Remove Image</button>
+            </label>
+            <label>
+              <span>Top Graphical Image</span>
+              <input type="file" ref="topGraphicalImg" @change="addImage(controls.pageHeader, 'topGraphic', 'topGraphicalImg')" />
+              <button @click="removeImage(controls.pageHeader, 'topGraphic', 'topGraphicalImg')">Remove Image</button>
+            </label>
+            <label>
+              <span>Bottom Graphical Image</span>
+              <input type="file" ref="bottomGraphicalImg" @change="addImage(controls.pageHeader, 'bottomGraphic', 'bottomGraphicalImg')" />
+              <button @click="removeImage(controls.pageHeader, 'bottomGraphic', 'bottomGraphicalImg')">Remove Image</button>
+            </label>
           </div>
         </div>
         <div class="controls__panel" v-if="controls.activePanel === 'body-content'">
@@ -66,6 +73,17 @@
             <label>
               <span>Show topic term and tags?</span>
               <input type="checkbox" v-model="controls.bodyContent.showTopicTermsAndTags">
+            </label>
+            <label>
+              <span>Show content rating?</span>
+              <input type="checkbox" v-model="controls.bodyContent.showContentRating">
+            </label>
+            <label>
+              <span>Background colour</span>
+              <select v-model="controls.bodyContent.backgroundColor">
+                <option value="white">White</option>
+                <option value="grey">Grey</option>
+              </select>
             </label>
           </div>
           <div class="field">
@@ -112,7 +130,18 @@
             </fieldset>
           </div>
         </div>
-        <div class="controls__panel" v-if="controls.activePanel === 'header-content'">Header content coming soon</div>
+        <div class="controls__panel" v-if="controls.activePanel === 'header-content'">
+          <div class="field">
+            <label>
+              <span>Show Acknowledgement of Country?</span>
+              <input type="checkbox" v-model="controls.headerContent.showAcknowledgement">
+            </label>
+            <label>
+              <span>Show Intro Banner Component</span>
+              <input type="checkbox" v-model="controls.headerContent.showIntroBanner">
+            </label>
+          </div>
+        </div>
         <div class="controls__panel" v-if="controls.activePanel === 'campaigns'">
           <div class="field">
             <fieldset>
@@ -177,12 +206,26 @@
         </div>
         <div class="controls__panel" v-if="controls.activePanel === 'sidebar'">
           <div class="field">
-            <div>
-              <label>
-                <span>Show Sidebar (this isn't a CMS option)</span>
-                <input type="checkbox" v-model="controls.sidebar.show">
-              </label>
-            </div>
+            <label>
+              <span>Show Site-section Navigation?</span>
+              <input type="checkbox" v-model="controls.sidebar.showSiteSectionNavigation">
+            </label>
+            <label>
+              <span>Show Related Content?</span>
+              <input type="checkbox" v-model="controls.sidebar.showRelatedContent">
+            </label>
+            <label>
+              <span>Show what's next?</span>
+              <input type="checkbox" v-model="controls.sidebar.showWhatsNext">
+            </label>
+            <label>
+              <span>Show contact details</span>
+              <input type="checkbox" v-model="controls.sidebar.showContactDetails">
+            </label>
+            <label>
+              <span>Show Social Sharing?</span>
+              <input type="checkbox" v-model="controls.sidebar.showSocialSharing">
+            </label>
           </div>
         </div>
       </div>
@@ -196,8 +239,8 @@
       </template>
       <!-- BODY CONTENT (Tide.vue) -->
       <rpl-page-layout
-        :sidebar="controls.sidebar.show"
-        :backgroundColor="pageLayoutBackgroundColor"
+        :sidebar="hasSidebar"
+        :backgroundColor="controls.bodyContent.backgroundColor"
         :heroBackgroundImage="heroBackgroundImage"
         :backgroundGraphic="topGraphic"
       >
@@ -207,7 +250,7 @@
 
         <template slot="aboveContent">
           <rpl-hero-banner v-bind="heroBannerData" class="rpl-site-constrain--on-all" />
-          <rpl-acknowledgement v-if="showAcknowledgement" :text="acknowledgement" theme="standalone" />
+          <rpl-acknowledgement v-if="controls.headerContent.showAcknowledgement" :text="acknowledgement" theme="standalone" />
         </template>
         <template slot="aboveContentTwo">
           <!-- Header Components -->
@@ -255,7 +298,7 @@
 
         <template slot="belowContent">
           <rpl-campaign-secondary class="rpl-site-constrain--on-all" v-if="campaignSecondary" v-bind="campaignSecondary" />
-          <tide-content-rating class="rpl-site-constrain--on-all" />
+          <tide-content-rating v-if="controls.bodyContent.showContentRating" class="rpl-site-constrain--on-all" />
         </template>
 
       </rpl-page-layout>
@@ -333,11 +376,6 @@ export default {
     RplCardPromo
   },
   data () {
-    const mainMenu = [
-        { text: 'Home', url: '#' },
-        { text: 'About us', url: '#' },
-        { text: 'Contact us', url: '#' }
-      ]
     return {
       publicPath: process.env.BASE_URL,
       cardColsSetting: {
@@ -351,120 +389,16 @@ export default {
           xxxl: 4
         }
       },
-      header: {
-        links: mainMenu,
-        breakpoint: 992,
-        sticky: false,
-        hideOnScroll: false,
-        showSearch: false,
-        showLogout: false
-      },
-      footer: {
-        nav: [{"text":"Your Services","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"About VIC Government","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"News","url":"#"},{"text":"Events","url":"#"},{"text":"Connect with us","url":"#","children":[{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"}]}],
-        links: [{"text":"Privacy","url":"#"},{"text":"Disclaimer","url":"#"},{"text":"Terms of use","url":"#"},{"text":"Sitemap","url":"#"},{"text":"Accessibility Statement","url":"#"},{"text":"Help","url":"#"}],
-        copyright: '© Copyright State Government of Victoria',
-        acknowledgement: 'The Victorian Government acknowledges Aboriginal and Torres Strait Islander people as the Traditional Custodians of the land and acknowledges and pays respect to their Elders, past and present.',
-        caption: 'Image credit: This caption is used to describe the image in the hero banner above.',
-        logos: [{"src":"https://via.placeholder.com/112x52","alt":"Max native size","url":"#"},{"src":"https://via.placeholder.com/32x32","alt":"Smaller than max size","url":"#"},{"src":"https://via.placeholder.com/80x200","alt":"Portrait","url":"#"},{"src":"https://via.placeholder.com/200x80","alt":"Landscape","url":"#"}]
-      },
       breadcrumbs: [
         { text: 'Home', url: '#' },
         { text: 'Page', url: '#' }
       ],
-      pageLayoutBackgroundColor: 'grey',
-      showAcknowledgement: true,
       acknowledgement: 'Hello world!',
-      headerComponents: [
-        {
-          name: 'rpl-intro-banner',
-          component: 'rpl-intro-banner',
-          data: {
-            title: 'My Title',
-            introText: 'Intro banner text',
-            linkHeading: 'Link heading',
-            links: [{ text: 'Home', url: '#' }],
-            showLinks: true,
-            linksType: 'link',
-            icon: 'alert_information'
-          },
-          class: ['rpl-site-constrain--on-all'],
-          id: 'header-1',
-        }
-      ],
-      sidebarComponents: [
-        {
-          name: 'rpl-related-links',
-          component: 'rpl-related-links',
-          order: 101,
-          data: {
-            title: 'Related links',
-            links: [
-              { text: 'Related Link 1', url: '#' },
-              { text: 'DuckDuckGo', url: 'https://duckduckgo.com' }
-            ]
-          }
-        },
-        {
-          name: 'rpl-whats-next',
-          component: 'rpl-whats-next',
-          order: 103,
-          data: {
-            title: 'What\'s next?',
-            links: [
-              { text: 'Whats next 1', url: '#' }
-            ]
-          }
-        },
-        {
-          name: 'rpl-site-section-navigation',
-          component: 'rpl-site-section-navigation',
-          order: 100,
-          data: {
-            menu: mainMenu,
-            title: 'My title',
-            activeLink: '/active'
-          }
-        },
-        {
-          name: 'rpl-contact',
-          component: 'rpl-contact',
-          order: 104,
-          data: {
-            title: 'Contact us',
-            name: 'Name',
-            department: 'Department',
-            postal: 'Postal',
-            address: 'Address',
-            phone: [
-              {
-                title: 'Home',
-                number: '123456789'
-              }
-            ],
-            email: 'email@example.com',
-            social: [
-              {
-                title: 'Social',
-                icon: 'facebook',
-                url: 'https://www.duckduckgo.com'
-              }
-            ]
-          }
-        },
-        {
-          name: 'rpl-share-this',
-          component: 'rpl-share-this',
-          order: 105,
-          data: {
-            title: 'Share this page',
-            url: `https://duckduckgo.com`
-          }
-        }
-      ],
       topic: { name: 'Topic', path: { alias: '#' } },
       tags: [{ name: 'Tag A', path: { alias: '#' } }, { name: 'Tag B', path: { alias: '#' } }],
       displayHeadings: 'showH2AndH3',
       updatedDate: { date: '2020-01-01T08:00:00' },
+      mainMenu: [{"text":"Your Services","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"About VIC Government","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"News","url":"#"},{"text":"Events","url":"#"},{"text":"Connect with us","url":"#","children":[{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"}]}],
       controls: {
         show: true,
         activePanel: 'page-header',
@@ -474,11 +408,17 @@ export default {
           showKeyLinks: false,
           showCrumbs: true,
           title: 'Landing Page',
-          introText: 'Aliqua reprehenderit laborum ad consequat proident aliquip est consectetur aute ut dolor esse proident et enim ad.'
+          introText: 'Aliqua reprehenderit laborum ad consequat proident aliquip est consectetur aute ut dolor esse proident et enim ad.',
+          showHeroImageCaption: false,
+          topGraphic: null,
+          bottomGraphic: null,
+          logo: null
         },
         bodyContent: {
           showTableOfContents: true,
           showTopicTermsAndTags: true,
+          showContentRating: true,
+          backgroundColor: 'white',
           addBodyComponent: 'basic_text',
           fieldSchemas: {
             'basic_text': [
@@ -495,7 +435,10 @@ export default {
             fields: [{ name: 'html', type: 'textarea', data: '<h2>Body Content Heading</h2>\n<p>Pariatur dolore elit sunt esse.</p>\n<ul>\n  <li>Aute nulla commodo magna.</li>\n  <li>Deserunt commodo occaecat eu.</li>\n</ul>' }]
           }]
         },
-        headerContent: {},
+        headerContent: {
+          showAcknowledgement: false,
+          showIntroBanner: false
+        },
         campaigns: {
           primary: {
             show: true,
@@ -516,6 +459,11 @@ export default {
         },
         sidebar: {
           show: true,
+          showSiteSectionNavigation: false,
+          showRelatedContent: false,
+          showWhatsNext: false,
+          showContactDetails: false,
+          showSocialSharing: true
         },
       }
     }
@@ -543,7 +491,7 @@ export default {
     },
     getCols (cols) {
       if (cols) {
-        if (this.controls.sidebar.show && cols.narrow) {
+        if (this.hasSidebar && cols.narrow) {
           return cols.narrow
         }
         if (cols.wide) {
@@ -595,17 +543,22 @@ export default {
         moreLink: { text: 'See more', url: '#' },
         theme: this.controls.pageHeader.theme,
         showLinks: this.controls.pageHeader.showKeyLinks,
-        backgroundGraphic: this.bottomGraphic
+        backgroundGraphic: this.bottomGraphic,
+        logo: this.controls.pageHeader.logo
       }
     },
     heroBackgroundImage () {
       return (this.controls.pageHeader.fileDesktop) ? { src: this.controls.pageHeader.fileDesktop } : null
     },
     topGraphic () {
-      return (process.env.NODE_ENV === 'development') ? topGraphicSrc : `img/header-pattern-shape.png`
+      return this.controls.pageHeader.topGraphic ? this.controls.pageHeader.topGraphic : topGraphicSrc
     },
     bottomGraphic () {
-      return (this.heroBackgroundImage == null) ? ((process.env.NODE_ENV === 'development') ? bottomGraphicSrc : `img/header-pattern-bottom.png`) : ''
+      if (this.heroBackgroundImage == null && !this.campaignPrimary) {
+        return this.controls.pageHeader.bottomGraphic ? this.controls.pageHeader.bottomGraphic : bottomGraphicSrc
+      } else {
+        return ''
+      }
     },
     anchorLinks () {
       if (this.controls.bodyContent.showTableOfContents && this.bodyComponents) {
@@ -636,6 +589,9 @@ export default {
     },
     orderedSidebarComponents () {
       return this.sidebarComponents.filter(a => a).sort((a, b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0))
+    },
+    hasSidebar () {
+      return (this.sidebarComponents.length > 0)
     },
     campaignPrimary () {
       return this.getCampaignDataFromControl(this.controls.campaigns.primary)
@@ -705,6 +661,129 @@ export default {
         }
         return rtn
       })
+    },
+    sidebarComponents () {
+      const rtn = []
+      if (this.controls.sidebar.showSiteSectionNavigation) {
+        rtn.push({
+          name: 'rpl-site-section-navigation',
+          component: 'rpl-site-section-navigation',
+          order: 100,
+          data: {
+            menu: this.mainMenu,
+            title: 'My title',
+            activeLink: '/active'
+          }
+        })
+      }
+      if (this.controls.sidebar.showRelatedContent) {
+        rtn.push({
+          name: 'rpl-related-links',
+          component: 'rpl-related-links',
+          order: 101,
+          data: {
+            title: 'Related links',
+            links: [
+              { text: 'Related Link 1', url: '#' },
+              { text: 'DuckDuckGo', url: 'https://duckduckgo.com' }
+            ]
+          }
+        })
+      }
+      if (this.controls.sidebar.showWhatsNext) {
+        rtn.push({
+          name: 'rpl-whats-next',
+          component: 'rpl-whats-next',
+          order: 103,
+          data: {
+            title: 'What\'s next?',
+            links: [
+              { text: 'Whats next 1', url: '#' }
+            ]
+          }
+        })
+      }
+      if (this.controls.sidebar.showContactDetails) {
+        rtn.push({
+          name: 'rpl-contact',
+          component: 'rpl-contact',
+          order: 104,
+          data: {
+            title: 'Contact us',
+            name: 'Name',
+            department: 'Department',
+            postal: 'Postal',
+            address: 'Address',
+            phone: [
+              {
+                title: 'Home',
+                number: '123456789'
+              }
+            ],
+            email: 'email@example.com',
+            social: [
+              {
+                title: 'Social',
+                icon: 'facebook',
+                url: 'https://www.duckduckgo.com'
+              }
+            ]
+          }
+        })
+      }
+      if (this.controls.sidebar.showSocialSharing) {
+        rtn.push({
+          name: 'rpl-share-this',
+          component: 'rpl-share-this',
+          order: 105,
+          data: {
+            title: 'Share this page',
+            url: `https://duckduckgo.com`
+          }
+        })
+      }
+      return rtn
+    },
+    headerComponents () {
+      const rtn = []
+      if (this.controls.headerContent.showIntroBanner) {
+        rtn.push({
+          name: 'rpl-intro-banner',
+          component: 'rpl-intro-banner',
+          data: {
+            title: 'My Title',
+            introText: 'Intro banner text',
+            linkHeading: 'Link heading',
+            links: [{ text: 'Home', url: '#' }],
+            showLinks: true,
+            linksType: 'link',
+            icon: 'alert_information'
+          },
+          class: ['rpl-site-constrain--on-all'],
+          id: 'header-1',
+        })
+      }
+      return rtn
+    },
+    header () {
+      return {
+        links: this.mainMenu,
+        breakpoint: 992,
+        sticky: false,
+        hideOnScroll: false,
+        showSearch: true,
+        showLogout: false
+      }
+    },
+    footer () {
+      return {
+        nav: this.mainMenu,
+        links: [{"text":"Privacy","url":"#"},{"text":"Disclaimer","url":"#"},{"text":"Terms of use","url":"#"},{"text":"Sitemap","url":"#"},{"text":"Accessibility Statement","url":"#"},{"text":"Help","url":"#"}],
+        copyright: '© Copyright State Government of Victoria',
+        acknowledgement: 'The Victorian Government acknowledges Aboriginal and Torres Strait Islander people as the Traditional Custodians of the land and acknowledges and pays respect to their Elders, past and present.',
+        caption: this.controls.pageHeader.showHeroImageCaption ? 'Image credit: This caption is used to describe the image in the hero banner above.' : null,
+        logos: [{"src":"https://via.placeholder.com/112x52","alt":"Max native size","url":"#"},{"src":"https://via.placeholder.com/32x32","alt":"Smaller than max size","url":"#"},{"src":"https://via.placeholder.com/80x200","alt":"Portrait","url":"#"},{"src":"https://via.placeholder.com/200x80","alt":"Landscape","url":"#"}]
+      }
     }
   },
 }
@@ -765,6 +844,9 @@ export default {
   }
 
   label {
+    margin-bottom: 4px;
+    display: block;
+
     span {
       display: block;
     }
@@ -772,6 +854,7 @@ export default {
 
   .field {
     width: 100%;
+    padding: 0 4px;
     @include rpl-breakpoint('m') {
       width: 33.33%;
     }
@@ -783,6 +866,7 @@ export default {
     textarea {
       width: 100%;
       height: 100px;
+      box-sizing: border-box;
     }
   }
 
