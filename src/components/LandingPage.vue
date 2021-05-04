@@ -542,7 +542,17 @@ export default {
             success: '#027a83',
             white: '#fff',
             black: '#000',
-            other: `--rpl-button-danger-hover-background-color: #c42c35;\n--rpl-pikaday-header-text-color: #475971;\n--rpl-breadcrumbs-link-color: #125ec6;\n--rpl-campaign-secondary-summary-text-color: #132a4a;\n--quotation-author-color: #53647a;\n--rpl-document-link-meta-color: #53647a;\n--rpl-campaign-primary-summary-text-color: #132a4a;\n--rpl-site-header-logout-btn-background-color-mobile: #012557;\n--rpl-document-link-meta-separator-color: #dadee2;\n--callout-wrapper-background-color: #e6f4fd;` }
+            other: `--rpl-button-danger-hover-background-color: #c42c35;
+--rpl-pikaday-header-text-color: #475971;
+--rpl-breadcrumbs-link-color: #125ec6;
+--rpl-campaign-secondary-summary-text-color: #132a4a;
+--quotation-author-color: #53647a;
+--rpl-document-link-meta-color: #53647a;
+--rpl-campaign-primary-summary-text-color: #132a4a;
+--rpl-site-header-logout-btn-background-color-mobile: #012557;
+--rpl-document-link-meta-separator-color: #dadee2;
+--callout-wrapper-background-color: #e6f4fd;
+--rpl-section-menu-active-left-bar: url('data:image/svg+xml,%3Csvg%20width%3D%224%22%20height%3D%221%22%20viewBox%3D%220%200%204%201%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%224%22%20height%3D%221%22%20fill%3D%22%230095ec%22%2F%3E%3C%2Fsvg%3E')` }
         }
       }
     }
@@ -970,6 +980,7 @@ export default {
       width: 100%;
       height: 100px;
       box-sizing: border-box;
+      white-space: pre;
     }
   }
 

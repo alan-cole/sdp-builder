@@ -25,6 +25,9 @@ $col-rpl-site-header-logout-btn-background-color-mobile: darken($col-dark_primar
 $col-rpl-document-link-meta-separator-color: mix($col-mid_neutral_1, $col-white, 93%);
 $col-callout-wrapper-background-color: mix(white, $col-secondary, 90%);
 
+// Variables for embedded SVG images.
+$col-rpl-section-menu-active-left-bar: url('data:image/svg+xml,%3Csvg%20width%3D%224%22%20height%3D%221%22%20viewBox%3D%220%200%204%201%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%224%22%20height%3D%221%22%20fill%3D%22%230095ec%22%2F%3E%3C%2Fsvg%3E');
+
 :root {
   --primary: #{$col-primary};
   --dark_primary: #{$col-dark_primary};
@@ -51,4 +54,6 @@ $col-callout-wrapper-background-color: mix(white, $col-secondary, 90%);
   --rpl-site-header-logout-btn-background-color-mobile: #{$col-rpl-site-header-logout-btn-background-color-mobile};
   --rpl-document-link-meta-separator-color: #{$col-rpl-document-link-meta-separator-color};
   --callout-wrapper-background-color: #{$col-callout-wrapper-background-color};
+  // SVG
+  --rpl-section-menu-active-left-bar: #{$col-rpl-section-menu-active-left-bar};
 }
