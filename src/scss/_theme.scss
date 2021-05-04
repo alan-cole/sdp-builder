@@ -33,15 +33,15 @@ $rpl-section-menu-active-left-bar: #{var(--rpl-section-menu-active-left-bar)};
 
 // Here’s the new gradient if necessary: #86C2B2 - #A6D9CD
 
-// $rpl-gradients: (
-//   'primary_gradient': linear-gradient(90deg, #43CE8B 0%, #189D9D 100%),
-//   'primary_gradient_90': linear-gradient(180deg, #43CE8B 0%, #189D9D 100%),
-//   'primary_gradient_0': linear-gradient(0deg, #43CE8B 0%, #189D9D 100%),
-//   'decorative_gradient': linear-gradient(-90deg, #43CE8B 0%, #189D9D 100%),
-//   'decorative_gradient_0': linear-gradient(0deg, #43CE8B 0%, #189D9D 100%),
-//   'decorative_gradient_90': linear-gradient(-180deg, #43CE8B 0%, #189D9D 100%),
-//   'decorative_gradient_180': linear-gradient(90deg, #43CE8B 0%, #189D9D 100%)
-// ) !default;
+$rpl-gradients: (
+  'primary_gradient': #{var(--primary_gradient)},
+  'primary_gradient_90': #{var(--primary_gradient_90)},
+  'primary_gradient_0': #{var(--primary_gradient_0)},
+  'decorative_gradient': #{var(--decorative_gradient)},
+  'decorative_gradient_0': #{var(--decorative_gradient_0)},
+  'decorative_gradient_90': #{var(--decorative_gradient_90)},
+  'decorative_gradient_180': #{var(--decorative_gradient_180)},
+);
 
 // Fonts
 // $rpl-font-directory: '../../../src/assets/fonts/';

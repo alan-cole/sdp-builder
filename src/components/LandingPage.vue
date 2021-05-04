@@ -233,66 +233,16 @@
           <div class="field">
             <fieldset>
               <legend>Colour Palette</legend>
-              <label>
-                <span>Primary</span>
-                <input type="text" v-model="controls.global.palette.primary" @change="updatePalette">
-              </label>
-              <label>
-                <span>Dark_primary</span>
-                <input type="text" v-model="controls.global.palette.dark_primary" @change="updatePalette">
-              </label>
-              <label>
-                <span>Secondary</span>
-                <input type="text" v-model="controls.global.palette.secondary" @change="updatePalette">
-              </label>
-              <label>
-                <span>Extra_dark_neutral</span>
-                <input type="text" v-model="controls.global.palette.extra_dark_neutral" @change="updatePalette">
-              </label>
-              <label>
-                <span>Dark_neutral</span>
-                <input type="text" v-model="controls.global.palette.dark_neutral" @change="updatePalette">
-              </label>
-              <label>
-                <span>Dark_neutral_1</span>
-                <input type="text" v-model="controls.global.palette.dark_neutral_1" @change="updatePalette">
-              </label>
-              <label>
-                <span>Mid_neutral_1</span>
-                <input type="text" v-model="controls.global.palette.mid_neutral_1" @change="updatePalette">
-              </label>
-              <label>
-                <span>Mid_neutral_2</span>
-                <input type="text" v-model="controls.global.palette.mid_neutral_2" @change="updatePalette">
-              </label>
-              <label>
-                <span>Light_neutral</span>
-                <input type="text" v-model="controls.global.palette.light_neutral" @change="updatePalette">
-              </label>
-              <label>
-                <span>Danger</span>
-                <input type="text" v-model="controls.global.palette.danger" @change="updatePalette">
-              </label>
-              <label>
-                <span>Warning</span>
-                <input type="text" v-model="controls.global.palette.warning" @change="updatePalette">
-              </label>
-              <label>
-                <span>Success</span>
-                <input type="text" v-model="controls.global.palette.success" @change="updatePalette">
-              </label>
-              <label>
-                <span>White</span>
-                <input type="text" v-model="controls.global.palette.white" @change="updatePalette">
-              </label>
-              <label>
-                <span>Black</span>
-                <input type="text" v-model="controls.global.palette.black" @change="updatePalette">
-              </label>
-              <label>
-                <span>Composite colours</span>
-                <textarea v-model="controls.global.palette.other" @change="updatePalette"></textarea>
-              </label>
+              <template v-for="(colour, colourIndex) in paletteNames">
+                <label v-if="colour !== 'other'" :key="`palette-names-${colour}`">
+                  <span>{{ colour }}</span>
+                  <input type="text" v-model="controls.global.palette[colour]" @change="updatePalette">
+                </label>
+                <label v-if="colour === 'other'" :key="`palette-names-${colour}`">
+                  <span>Composite colours</span>
+                  <textarea v-model="controls.global.palette.other" @change="updatePalette"></textarea>
+                </label>
+              </template>
             </fieldset>
           </div>
         </div>
@@ -542,6 +492,13 @@ export default {
             success: '#027a83',
             white: '#fff',
             black: '#000',
+            primary_gradient: 'linear-gradient(90deg, #0052c2 0%, #0095ec 100%)',
+            primary_gradient_90: 'linear-gradient(180deg, #0052c2 0%, #0095ec 100%)',
+            primary_gradient_0: 'linear-gradient(0deg, #0052c2 0%, #0095ec 100%)',
+            decorative_gradient: 'linear-gradient(-90deg, #0052c2 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
+            decorative_gradient_0: 'linear-gradient(0deg, #0052c2 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
+            decorative_gradient_90: 'linear-gradient(-180deg, #0052c2 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
+            decorative_gradient_180: 'linear-gradient(90deg, #0052c2 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
             other: `--rpl-button-danger-hover-background-color: #c42c35;
 --rpl-pikaday-header-text-color: #475971;
 --rpl-breadcrumbs-link-color: #125ec6;
@@ -559,20 +516,11 @@ export default {
   },
   methods: {
     updatePalette () {
-      document.documentElement.style.setProperty('--primary', this.controls.global.palette.primary)
-      document.documentElement.style.setProperty('--dark_primary', this.controls.global.palette.dark_primary)
-      document.documentElement.style.setProperty('--secondary', this.controls.global.palette.secondary)
-      document.documentElement.style.setProperty('--extra_dark_neutral', this.controls.global.palette.extra_dark_neutral)
-      document.documentElement.style.setProperty('--dark_neutral', this.controls.global.palette.dark_neutral)
-      document.documentElement.style.setProperty('--dark_neutral_1', this.controls.global.palette.dark_neutral_1)
-      document.documentElement.style.setProperty('--mid_neutral_1', this.controls.global.palette.mid_neutral_1)
-      document.documentElement.style.setProperty('--mid_neutral_2', this.controls.global.palette.mid_neutral_2)
-      document.documentElement.style.setProperty('--light_neutral', this.controls.global.palette.light_neutral)
-      document.documentElement.style.setProperty('--danger', this.controls.global.palette.danger)
-      document.documentElement.style.setProperty('--warning', this.controls.global.palette.warning)
-      document.documentElement.style.setProperty('--success', this.controls.global.palette.success)
-      document.documentElement.style.setProperty('--white', this.controls.global.palette.white)
-      document.documentElement.style.setProperty('--black', this.controls.global.palette.black)
+      this.paletteNames.forEach(colour => {
+        if (colour !== 'other') {
+          document.documentElement.style.setProperty(`--${colour}`, this.controls.global.palette[colour])
+        }
+      })
       const extra = this.controls.global.palette.other
       const lines = extra.split('\n')
       lines.forEach(line => {
@@ -642,6 +590,9 @@ export default {
     }
   },
   computed: {
+    paletteNames () {
+      return Object.keys(this.controls.global.palette)
+    },
     heroBannerData () {
       return {
         title: this.controls.pageHeader.title,
