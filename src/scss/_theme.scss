@@ -2,27 +2,34 @@
 // Overwrites values in Ripple
 @import '~@dpc-sdp/ripple-global/scss/settings/functions';
 
-// $rpl-colors: (
-//   'primary': #292E33,
-//   'dark_primary': #14171A,
-//   'secondary': #414952,
-//   'extra_dark_neutral': #292E33,
-//   'dark_neutral': #414952,
-//   'mid_neutral_1': #D5DAE0,
-//   'mid_neutral_2': #E8EBEE,
-//   'light_neutral': #F7F9FA,
-//   'danger': #af272f,
-//   'warning': #ca4c21,
-//   'success': #009ca6,
-//   'white': #fff,
-//   'black': #000,
-//   'salsared': #B82025,
-//   'salsacsbudget': #00787e,
-//   'salsacsprojectdate': #4a4c50,
-//   'salsacsproduct': #c01d2c,
-//   'salsacsindustry': #004380,
-//   'salsacsstatus': #009aa1,
-// );
+$rpl-colors: (
+  'primary': #{var(--primary)},
+  'dark_primary': #{var(--dark_primary)},
+  'secondary': #{var(--secondary)},
+  'extra_dark_neutral': #{var(--extra_dark_neutral)},
+  'dark_neutral': #{var(--dark_neutral)},
+  'dark_neutral_1': #{var(--dark_neutral_1)},
+  'mid_neutral_1': #{var(--mid_neutral_1)},
+  'mid_neutral_2': #{var(--mid_neutral_2)},
+  'light_neutral': #{var(--light_neutral)},
+  'danger': #{var(--danger)},
+  'warning': #{var(--warning)},
+  'success': #{var(--success)},
+  'white': #{var(--white)},
+  'black': #{var(--black)}
+);
+
+$rpl-button-danger-hover-background-color: #{var(--rpl-button-danger-hover-background-color)};
+$rpl-pikaday-header-text-color: #{var(--rpl-pikaday-header-text-color)};
+$rpl-breadcrumbs-link-color: #{var(--rpl-breadcrumbs-link-color)};
+$rpl-campaign-secondary-summary-text-color: #{var(--rpl-campaign-secondary-summary-text-color)};
+$quotation-author-color: #{var(--quotation-author-color)};
+$rpl-document-link-meta-color: #{var(--rpl-document-link-meta-color)};
+$rpl-campaign-primary-summary-text-color: #{var(--rpl-campaign-primary-summary-text-color)};
+$rpl-site-header-logout-btn-background-color-mobile: #{var(--rpl-site-header-logout-btn-background-color-mobile)};
+$rpl-document-link-meta-separator-color: #{var(--rpl-document-link-meta-separator-color)};
+$callout-wrapper-background-color: #{var(--callout-wrapper-background-color)};
+
 // Here’s the new gradient if necessary: #86C2B2 - #A6D9CD
 
 // $rpl-gradients: (

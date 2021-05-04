@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import './scss/_custom.scss'
 import '@dpc-sdp/ripple-global/style.scss'
 import RplGlobal from '@dpc-sdp/ripple-global'
 import RplMarkupExamplePlugins from '@dpc-sdp/ripple-markup/examplePlugins'

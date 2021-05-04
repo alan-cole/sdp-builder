@@ -1,0 +1,54 @@
+$col-primary: #0052c2;
+$col-dark_primary: #023b89;
+$col-secondary: #0095ec;
+$col-extra_dark_neutral: #011a3c;
+$col-dark_neutral: #465870;
+$col-dark_neutral_1: #546a7c;
+$col-mid_neutral_1: #d7dbe0;
+$col-mid_neutral_2: #e8ebee;
+$col-light_neutral: #f6f6f9;
+$col-danger: #af272f;
+$col-warning: #ca4c21;
+$col-success: #027a83;
+$col-white: #fff;
+$col-black: #000;
+
+// Variables with composite colours - these use SCSS mixins which need to be resolved into a HEX value before setting as a CSS variable.
+$col-rpl-button-danger-hover-background-color: lighten($col-danger, 5%);
+$col-rpl-pikaday-header-text-color: mix($col-white, $col-dark_neutral, 0.65);
+$col-rpl-breadcrumbs-link-color: mix($col-primary, $col-white, 93%);
+$col-rpl-campaign-secondary-summary-text-color: mix($col-extra_dark_neutral, $col-white, 93%);
+$col-quotation-author-color: mix($col-dark_neutral, $col-white, 93%);
+$col-rpl-document-link-meta-color: mix($col-dark_neutral, $col-white, 93%);
+$col-rpl-campaign-primary-summary-text-color: mix($col-extra_dark_neutral, $col-white, 93%);
+$col-rpl-site-header-logout-btn-background-color-mobile: darken($col-dark_primary, 10%);
+$col-rpl-document-link-meta-separator-color: mix($col-mid_neutral_1, $col-white, 93%);
+$col-callout-wrapper-background-color: mix(white, $col-secondary, 90%);
+
+:root {
+  --primary: #{$col-primary};
+  --dark_primary: #{$col-dark_primary};
+  --secondary: #{$col-secondary};
+  --extra_dark_neutral: #{$col-extra_dark_neutral};
+  --dark_neutral: #{$col-dark_neutral};
+  --dark_neutral_1: #{$col-dark_neutral_1};
+  --mid_neutral_1: #{$col-mid_neutral_1};
+  --mid_neutral_2: #{$col-mid_neutral_2};
+  --light_neutral: #{$col-light_neutral};
+  --danger: #{$col-danger};
+  --warning: #{$col-warning};
+  --success: #{$col-success};
+  --white: #{$col-white};
+  --black: #{$col-black};
+  // Composite colours
+  --rpl-button-danger-hover-background-color: #{$col-rpl-button-danger-hover-background-color};
+  --rpl-pikaday-header-text-color: #{$col-rpl-pikaday-header-text-color};
+  --rpl-breadcrumbs-link-color: #{$col-rpl-breadcrumbs-link-color};
+  --rpl-campaign-secondary-summary-text-color: #{$col-rpl-campaign-secondary-summary-text-color};
+  --quotation-author-color: #{$col-quotation-author-color};
+  --rpl-document-link-meta-color: #{$col-rpl-document-link-meta-color};
+  --rpl-campaign-primary-summary-text-color: #{$col-rpl-campaign-primary-summary-text-color};
+  --rpl-site-header-logout-btn-background-color-mobile: #{$col-rpl-site-header-logout-btn-background-color-mobile};
+  --rpl-document-link-meta-separator-color: #{$col-rpl-document-link-meta-separator-color};
+  --callout-wrapper-background-color: #{$col-callout-wrapper-background-color};
+}

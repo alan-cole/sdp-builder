@@ -5,11 +5,12 @@
       <button class="controls__toggle" @click="controls.show = !controls.show">{{ controls.show ? 'Hide' : 'Show'}} Toolbar</button>
       <div v-if="controls.show">
         <div class="controls__tabs">
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'page-header'}"@click="controls.activePanel = 'page-header'">Page Header</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'body-content'}"@click="controls.activePanel = 'body-content'">Body Content</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'header-content'}"@click="controls.activePanel = 'header-content'">Header Content</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'campaigns'}"@click="controls.activePanel = 'campaigns'">Campaigns</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'sidebar'}"@click="controls.activePanel = 'sidebar'">Sidebar</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'page-header'}" @click="controls.activePanel = 'page-header'">Page Header</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'body-content'}" @click="controls.activePanel = 'body-content'">Body Content</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'header-content'}" @click="controls.activePanel = 'header-content'">Header Content</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'campaigns'}" @click="controls.activePanel = 'campaigns'">Campaigns</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'sidebar'}" @click="controls.activePanel = 'sidebar'">Sidebar</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'global'}" @click="controls.activePanel = 'global'">Global</button>
         </div>
         <div class="controls__panel" v-if="controls.activePanel === 'page-header'">
           <div class="field">
@@ -228,6 +229,73 @@
             </label>
           </div>
         </div>
+        <div class="controls__panel" v-if="controls.activePanel === 'global'">
+          <div class="field">
+            <fieldset>
+              <legend>Colour Palette</legend>
+              <label>
+                <span>Primary</span>
+                <input type="text" v-model="controls.global.palette.primary" @change="updatePalette">
+              </label>
+              <label>
+                <span>Dark_primary</span>
+                <input type="text" v-model="controls.global.palette.dark_primary" @change="updatePalette">
+              </label>
+              <label>
+                <span>Secondary</span>
+                <input type="text" v-model="controls.global.palette.secondary" @change="updatePalette">
+              </label>
+              <label>
+                <span>Extra_dark_neutral</span>
+                <input type="text" v-model="controls.global.palette.extra_dark_neutral" @change="updatePalette">
+              </label>
+              <label>
+                <span>Dark_neutral</span>
+                <input type="text" v-model="controls.global.palette.dark_neutral" @change="updatePalette">
+              </label>
+              <label>
+                <span>Dark_neutral_1</span>
+                <input type="text" v-model="controls.global.palette.dark_neutral_1" @change="updatePalette">
+              </label>
+              <label>
+                <span>Mid_neutral_1</span>
+                <input type="text" v-model="controls.global.palette.mid_neutral_1" @change="updatePalette">
+              </label>
+              <label>
+                <span>Mid_neutral_2</span>
+                <input type="text" v-model="controls.global.palette.mid_neutral_2" @change="updatePalette">
+              </label>
+              <label>
+                <span>Light_neutral</span>
+                <input type="text" v-model="controls.global.palette.light_neutral" @change="updatePalette">
+              </label>
+              <label>
+                <span>Danger</span>
+                <input type="text" v-model="controls.global.palette.danger" @change="updatePalette">
+              </label>
+              <label>
+                <span>Warning</span>
+                <input type="text" v-model="controls.global.palette.warning" @change="updatePalette">
+              </label>
+              <label>
+                <span>Success</span>
+                <input type="text" v-model="controls.global.palette.success" @change="updatePalette">
+              </label>
+              <label>
+                <span>White</span>
+                <input type="text" v-model="controls.global.palette.white" @change="updatePalette">
+              </label>
+              <label>
+                <span>Black</span>
+                <input type="text" v-model="controls.global.palette.black" @change="updatePalette">
+              </label>
+              <label>
+                <span>Composite colours</span>
+                <textarea v-model="controls.global.palette.other" @change="updatePalette"></textarea>
+              </label>
+            </fieldset>
+          </div>
+        </div>
       </div>
     </div>
     <!-- Ripple Base Layout (default.vue) -->
@@ -379,15 +447,8 @@ export default {
     return {
       publicPath: process.env.BASE_URL,
       cardColsSetting: {
-        wide: {
-          m: 6,
-          l: 4,
-          xxxl: 3
-        },
-        narrow: {
-          m: 6,
-          xxxl: 4
-        }
+        wide: { m: 6, l: 4, xxxl: 3 },
+        narrow: { m: 6, xxxl: 4 }
       },
       breadcrumbs: [
         { text: 'Home', url: '#' },
@@ -432,7 +493,7 @@ export default {
           },
           components: [{
             type: 'basic_text',
-            fields: [{ name: 'html', type: 'textarea', data: '<h2>Body Content Heading</h2>\n<p>Pariatur dolore elit sunt esse.</p>\n<ul>\n  <li>Aute nulla commodo magna.</li>\n  <li>Deserunt commodo occaecat eu.</li>\n</ul>' }]
+            fields: [{ name: 'html', type: 'textarea', data: '<h2>Body Content Heading</h2>\n<p>Pariatur dolore elit sunt esse.</p>\n<ul>\n  <li>Aute nulla commodo magna.</li>\n  <li>Deserunt commodo occaecat eu.</li>\n</ul>\n<div class="callout-wrapper"><p>Lorem ipsum dolor sit amet.</p></div>' }]
           }]
         },
         headerContent: {
@@ -465,10 +526,52 @@ export default {
           showContactDetails: false,
           showSocialSharing: true
         },
+        global: {
+          palette: {
+            primary: '#0052c2',
+            dark_primary: '#023b89',
+            secondary: '#0095ec',
+            extra_dark_neutral: '#011a3c',
+            dark_neutral: '#465870',
+            dark_neutral_1: '#546a7c',
+            mid_neutral_1: '#d7dbe0',
+            mid_neutral_2: '#e8ebee',
+            light_neutral: '#f6f6f9',
+            danger: '#af272f',
+            warning: '#ca4c21',
+            success: '#027a83',
+            white: '#fff',
+            black: '#000',
+            other: `--rpl-button-danger-hover-background-color: #c42c35;\n--rpl-pikaday-header-text-color: #475971;\n--rpl-breadcrumbs-link-color: #125ec6;\n--rpl-campaign-secondary-summary-text-color: #132a4a;\n--quotation-author-color: #53647a;\n--rpl-document-link-meta-color: #53647a;\n--rpl-campaign-primary-summary-text-color: #132a4a;\n--rpl-site-header-logout-btn-background-color-mobile: #012557;\n--rpl-document-link-meta-separator-color: #dadee2;\n--callout-wrapper-background-color: #e6f4fd;` }
+        }
       }
     }
   },
   methods: {
+    updatePalette () {
+      document.documentElement.style.setProperty('--primary', this.controls.global.palette.primary)
+      document.documentElement.style.setProperty('--dark_primary', this.controls.global.palette.dark_primary)
+      document.documentElement.style.setProperty('--secondary', this.controls.global.palette.secondary)
+      document.documentElement.style.setProperty('--extra_dark_neutral', this.controls.global.palette.extra_dark_neutral)
+      document.documentElement.style.setProperty('--dark_neutral', this.controls.global.palette.dark_neutral)
+      document.documentElement.style.setProperty('--dark_neutral_1', this.controls.global.palette.dark_neutral_1)
+      document.documentElement.style.setProperty('--mid_neutral_1', this.controls.global.palette.mid_neutral_1)
+      document.documentElement.style.setProperty('--mid_neutral_2', this.controls.global.palette.mid_neutral_2)
+      document.documentElement.style.setProperty('--light_neutral', this.controls.global.palette.light_neutral)
+      document.documentElement.style.setProperty('--danger', this.controls.global.palette.danger)
+      document.documentElement.style.setProperty('--warning', this.controls.global.palette.warning)
+      document.documentElement.style.setProperty('--success', this.controls.global.palette.success)
+      document.documentElement.style.setProperty('--white', this.controls.global.palette.white)
+      document.documentElement.style.setProperty('--black', this.controls.global.palette.black)
+      const extra = this.controls.global.palette.other
+      const lines = extra.split('\n')
+      lines.forEach(line => {
+        const x = line.split(': ')
+        const key = x[0]
+        const value = x[1].replace(';', '')
+        document.documentElement.style.setProperty(key, value)
+      })
+    },
     addImage (obj, key, ref) {
       if (this.$refs[ref].files && this.$refs[ref].files.length > 0) {
         var fileReaderDesktop = new FileReader()
