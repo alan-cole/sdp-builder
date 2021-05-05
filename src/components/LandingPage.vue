@@ -109,7 +109,7 @@
                 <option disabled value="user_authentication_block">user_authentication_block</option>
                 <option disabled value="data_table">data_table</option>
                 <option disabled value="form_embed_openforms">form_embed_openforms</option>
-                <option disabled value="navigation_card">navigation_card</option>
+                <option value="navigation_card">navigation_card</option>
                 <option value="promotion_card">promotion_card</option>
               </select>
             </label>
@@ -348,7 +348,8 @@ import AppTopicTags from './AppTopicTags'
 import { anchorUtils } from '../libs/anchorlinks.js'
 import RplAnchorLinks from '@dpc-sdp/ripple-anchor-links'
 import {
-  RplCardPromo
+  RplCardPromo,
+  RplCardNav,
 } from '@dpc-sdp/ripple-card'
 // Custom
 import topGraphicSrc from '../assets/img/header-pattern-shape.png'
@@ -391,7 +392,8 @@ export default {
     RplSiteSectionNavigation,
     RplContact,
     RplShareThis,
-    RplCardPromo
+    RplCardPromo,
+    RplCardNav
   },
   data () {
     return {
@@ -436,9 +438,20 @@ export default {
               { name: 'html', type: 'textarea', data: '' }
             ],
             'promotion_card': [
-              { name: 'Link', type: 'select', options: ['Demo A', 'Demo B', 'Demo C'], data: 'Demo A' },
-              { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' },
-              { name: 'Show supplemental info', type: 'input.checkbox', data: true }
+              { name: 'Internal Link', type: 'select', options: ['', 'Demo A', 'Demo B', 'Demo C'], data: '' },
+              { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
+              { name: 'External Link', type: 'input.text', data: '#' },
+              { name: 'Title (for external Link)', type: 'input.text', data: 'Promo title' },
+              { name: 'Summary (for external Link)', type: 'input.text', data: 'Promo summary' },
+              { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
+            ],
+            'navigation_card': [
+              { name: 'Internal Link', type: 'select', options: ['', 'Demo A'], data: '' },
+              { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
+              { name: 'External Link', type: 'input.text', data: '#' },
+              { name: 'Title (for external Link)', type: 'input.text', data: 'Navigation title' },
+              { name: 'Summary (for external Link)', type: 'input.text', data: 'Navigation summary' },
+              { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
             ],
           },
           components: [{
@@ -686,30 +699,51 @@ export default {
           }
         } else if (comp.type === 'promotion_card') {
           const data = {}
-          if (comp.fields[0].data === 'Demo A') {
+          const fieldIntLink = comp.fields[0].data
+          const fieldSup = comp.fields[1].data
+          const fieldExtLink = comp.fields[2].data
+          const fieldTitle = comp.fields[3].data
+          const fieldSummary = comp.fields[4].data
+          const fieldDisplayStyle = comp.fields[5].data
+          if (fieldIntLink === 'Demo A') {
             data.title = 'Demo A'
-            data.link = { text: '', url: '#content-a'}
+            data.image = { src: sample }
             data.summary = 'Lorem ipsum in esse nostrud magna pariatur sunt in qui reprehenderit et eu exercitation officia qui sunt esse esse ad deserunt.'
-            data.image = { src: sample }
+            data.link = { text: '', url: '#content-a'}
+            data.topic = 'Demo A Topic'
+            data.contentType = 'event'
+            data.dateStart = '2022-01-01T08:00:00'
+            data.dateEnd = '2022-11-13T08:00:00'
+            data.authors = ['Author A', 'Author B']
+            data.inductionYear = '2001'
+            data.isGrantOnGoing = 'Yes'
+            data.fvRecommendationStatus = 'Recommended'
+            data.showMeta = fieldSup
           }
-          if (comp.fields[0].data === 'Demo B') {
+          if (fieldIntLink === 'Demo B') {
             data.title = 'Demo B Content example'
-            data.link = { text: '', url: '#content-b'}
-            data.summary = 'Lorem ipsum quis dolor velit et proident velit elit mollit occaecat aute aliquip magna quis exercitation excepteur sunt amet voluptate dolore sint.'
             data.image = { src: sample }
+            data.summary = 'Lorem ipsum quis dolor velit et proident velit elit mollit occaecat aute aliquip magna quis exercitation excepteur sunt amet voluptate dolore sint.'
+            data.link = { text: '', url: '#content-b'}
             data.dateStart = '2022-01-01T08:00:00'
             data.dateEnd = '2022-11-13T08:00:00'
             data.contentType = 'event'
+            data.showMeta = fieldSup
           }
-          if (comp.fields[0].data === 'Demo C') {
+          if (fieldIntLink === 'Demo C') {
             data.title = 'Demo C extra large content example'
-            data.link = { text: '', url: '#content-c'}
-            data.summary = 'Dolore deserunt tempor do magna irure nisi ut laborum consequat incididunt duis duis proident ea sit adipisicing do est officia labore ullamco et cupidatat aute nisi eu esse magna irure veniam adipisicing do dolore ex aute sint laboris dolore tempor dolor enim sit esse anim ut ex sit nostrud in id enim enim occaecat nostrud in labore quis consequat eiusmod occaecat exercitation anim ut excepteur excepteur dolor quis sunt ut ut cupidatat ex non velit ea cupidatat dolore eiusmod in ut magna cupidatat pariatur officia consectetur aute reprehenderit pariatur ex culpa nisi esse fugiat ullamco ex nisi est elit in voluptate do sed amet qui anim dolore ea deserunt qui qui in qui consequat incididunt quis aute aliqua quis do proident eiusmod non dolor nostrud aliquip excepteur fugiat exercitation culpa nulla ea reprehenderit tempor minim officia ea est nulla sint sunt ea adipisicing aliquip cillum non non anim nulla duis eiusmod proident voluptate sint.'
             data.image = { src: sample }
+            data.summary = 'Dolore deserunt tempor do magna irure nisi ut laborum consequat incididunt duis duis proident ea sit adipisicing do est officia labore ullamco et cupidatat aute nisi eu esse magna irure veniam adipisicing do dolore ex aute sint laboris dolore tempor dolor enim sit esse anim ut ex sit nostrud in id enim enim occaecat nostrud in labore quis consequat eiusmod occaecat exercitation anim ut excepteur excepteur dolor quis sunt ut ut cupidatat ex non velit ea cupidatat dolore eiusmod in ut magna cupidatat pariatur officia consectetur aute reprehenderit pariatur ex culpa nisi esse fugiat ullamco ex nisi est elit in voluptate do sed amet qui anim dolore ea deserunt qui qui in qui consequat incididunt quis aute aliqua quis do proident eiusmod non dolor nostrud aliquip excepteur fugiat exercitation culpa nulla ea reprehenderit tempor minim officia ea est nulla sint sunt ea adipisicing aliquip cillum non non anim nulla duis eiusmod proident voluptate sint.'
+            data.link = { text: '', url: '#content-c'}
             data.topic = 'Demo C Topic'
+            data.showMeta = fieldSup
           }
-          data.displayStyle = comp.fields[1].data
-          data.showMeta = comp.fields[2].data
+          if (fieldIntLink === '') {
+            data.title = fieldTitle
+            data.summary = fieldSummary
+            data.link = { text: '', url: fieldExtLink }
+          }
+          data.displayStyle = fieldDisplayStyle
           rtn = {
             name: 'rpl-card-promo',
             component: 'rpl-card-promo',
@@ -719,6 +753,45 @@ export default {
             childCols: null,
             class: [],
             cols: this.getCols(this.cardColsSetting),
+            // ssr: true,
+            id: `bodycomp-${idx}`
+          }
+        } else if (comp.type === 'navigation_card') {
+          const data = {}
+          const fieldIntLink = comp.fields[0].data
+          const fieldSup = comp.fields[1].data
+          const fieldExtLink = comp.fields[2].data
+          const fieldTitle = comp.fields[3].data
+          const fieldSummary = comp.fields[4].data
+          const fieldDisplayStyle = comp.fields[5].data
+          if (fieldIntLink === 'Demo A') {
+            data.title = 'Demo A'
+            data.image = { src: sample }
+            data.summary = 'Lorem ipsum in esse nostrud magna pariatur sunt in qui reprehenderit et eu exercitation officia qui sunt esse esse ad deserunt.'
+            data.link = { text: '', url: '#content-a' }
+            data.topic = 'Demo A Topic'
+            data.contentType = 'event'
+            data.dateStart = '2022-01-01T08:00:00'
+            data.dateEnd = '2022-11-13T08:00:00'
+            data.authors = ['Author A', 'Author B']
+            data.inductionYear = '2001'
+            data.isGrantOnGoing = 'Yes'
+            data.fvRecommendationStatus = 'Recommended'
+            data.showMeta = fieldSup
+          } else if (fieldIntLink === '') {
+            data.title = fieldTitle
+            data.summary = fieldSummary
+            data.link = { text: '', url: fieldExtLink }
+          }
+          data.displayStyle = fieldDisplayStyle
+          rtn = {
+            name: 'rpl-card-nav',
+            component: 'rpl-card-nav',
+            data: {
+              ...data
+            },
+            childCols: null,
+            class: [],
             // ssr: true,
             id: `bodycomp-${idx}`
           }
