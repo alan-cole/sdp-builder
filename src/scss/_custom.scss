@@ -44,13 +44,13 @@ $col-rpl-section-menu-active-left-bar: url('data:image/svg+xml,%3Csvg%20width%3D
   --white: #{$col-white};
   --black: #{$col-black};
   // Gradients
-  --primary_gradient: linear-gradient(90deg, #{$col-primary} 0%, #{$col-secondary} 100%);
-  --primary_gradient_90: linear-gradient(180deg, #{$col-primary} 0%, #{$col-secondary} 100%);
-  --primary_gradient_0: linear-gradient(0deg, #{$col-primary} 0%, #{$col-secondary} 100%);
-  --decorative_gradient: linear-gradient(-90deg, #{$col-primary} 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%);
-  --decorative_gradient_0: linear-gradient(0deg, #{$col-primary} 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%);
-  --decorative_gradient_90: linear-gradient(-180deg, #{$col-primary} 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%);
-  --decorative_gradient_180: linear-gradient(90deg, #{$col-primary} 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%);
+  --primary_gradient: linear-gradient(90deg, #{var(--primary)} 0%, #{var(--secondary)} 100%);
+  --primary_gradient_90: linear-gradient(180deg, #{var(--primary)} 0%, #{var(--secondary)} 100%);
+  --primary_gradient_0: linear-gradient(0deg, #{var(--primary)} 0%, #{var(--secondary)} 100%);
+  --decorative_gradient: linear-gradient(-90deg, #{var(--primary)} 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%);
+  --decorative_gradient_0: linear-gradient(0deg, #{var(--primary)} 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%);
+  --decorative_gradient_90: linear-gradient(-180deg, #{var(--primary)} 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%);
+  --decorative_gradient_180: linear-gradient(90deg, #{var(--primary)} 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%);
   // Composite colours
   --rpl-button-danger-hover-background-color: #{$col-rpl-button-danger-hover-background-color};
   --rpl-pikaday-header-text-color: #{$col-rpl-pikaday-header-text-color};
