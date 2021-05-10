@@ -1,18 +1,19 @@
 <template>
-  <div class="page" :class="{ 'page--controls-hidden': !controls.show }">
+  <div class="page" :class="{ 'page--controls-hidden': !filemanagement.show }">
     <!-- Controls -->
     <div class="controls">
-      <button class="controls__toggle" @click="controls.show = !controls.show">{{ controls.show ? 'Hide' : 'Show'}} Toolbar</button>
-      <div v-if="controls.show">
+      <button class="controls__toggle" @click="filemanagement.show = !filemanagement.show">{{ filemanagement.show ? 'Hide' : 'Show'}} Toolbar</button>
+      <div v-if="filemanagement.show">
         <div class="controls__tabs">
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'page-header'}" @click="controls.activePanel = 'page-header'">Page Header</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'body-content'}" @click="controls.activePanel = 'body-content'">Body Content</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'header-content'}" @click="controls.activePanel = 'header-content'">Header Content</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'campaigns'}" @click="controls.activePanel = 'campaigns'">Campaigns</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'sidebar'}" @click="controls.activePanel = 'sidebar'">Sidebar</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : controls.activePanel === 'global'}" @click="controls.activePanel = 'global'">Global</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'page-header'}" @click="filemanagement.activePanel = 'page-header'">Page Header</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'body-content'}" @click="filemanagement.activePanel = 'body-content'">Body Content</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'header-content'}" @click="filemanagement.activePanel = 'header-content'">Header Content</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'campaigns'}" @click="filemanagement.activePanel = 'campaigns'">Campaigns</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'sidebar'}" @click="filemanagement.activePanel = 'sidebar'">Sidebar</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'global'}" @click="filemanagement.activePanel = 'global'">Global</button>
+          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'save'}" @click="filemanagement.activePanel = 'save'">Save</button>
         </div>
-        <div class="controls__panel" v-if="controls.activePanel === 'page-header'">
+        <div class="controls__panel" v-if="filemanagement.activePanel === 'page-header'">
           <div class="field">
             <label>
               <span>Page title</span>
@@ -65,7 +66,7 @@
             </label>
           </div>
         </div>
-        <div class="controls__panel" v-if="controls.activePanel === 'body-content'">
+        <div class="controls__panel" v-if="filemanagement.activePanel === 'body-content'">
           <div class="field">
             <label>
               <span>Show Table of Content?</span>
@@ -90,7 +91,7 @@
           <div class="field">
             <label>
               <span>Add Body Component</span>
-              <select v-model="controls.bodyContent.addBodyComponent">
+              <select v-model="filemanagement.addBodyComponent">
                 <option value="basic_text">basic_text</option>
                 <option disabled value="accordion">accordion</option>
                 <option disabled value="card_keydates">card_keydates</option>
@@ -131,7 +132,7 @@
             </fieldset>
           </div>
         </div>
-        <div class="controls__panel" v-if="controls.activePanel === 'header-content'">
+        <div class="controls__panel" v-if="filemanagement.activePanel === 'header-content'">
           <div class="field">
             <label>
               <span>Show Acknowledgement of Country?</span>
@@ -143,7 +144,7 @@
             </label>
           </div>
         </div>
-        <div class="controls__panel" v-if="controls.activePanel === 'campaigns'">
+        <div class="controls__panel" v-if="filemanagement.activePanel === 'campaigns'">
           <div class="field">
             <fieldset>
               <legend>Campaign Primary</legend>
@@ -205,7 +206,7 @@
             </fieldset>
           </div>
         </div>
-        <div class="controls__panel" v-if="controls.activePanel === 'sidebar'">
+        <div class="controls__panel" v-if="filemanagement.activePanel === 'sidebar'">
           <div class="field">
             <label>
               <span>Show Site-section Navigation?</span>
@@ -229,7 +230,7 @@
             </label>
           </div>
         </div>
-        <div class="controls__panel" v-if="controls.activePanel === 'global'">
+        <div class="controls__panel" v-if="filemanagement.activePanel === 'global'">
           <div class="field">
             <fieldset>
               <legend>Colour Palette</legend>
@@ -244,6 +245,20 @@
                 </label>
               </template>
             </fieldset>
+          </div>
+          <div class="field">
+            <label>Main Menu</label>
+            <menu-control :menu="controls.global.mainMenu" />
+          </div>
+        </div>
+        <div class="controls__panel" v-if="filemanagement.activePanel === 'save'">
+          <div class="field">
+            <input type="button" value="Export JSON" @click="exportControls" />
+            <input type="button" value="Import JSON" @click="importControls" />
+            <label>
+              <label>Configuration</label>
+              <textarea v-model="filemanagement.configuration" />
+            </label>
           </div>
         </div>
       </div>
@@ -345,6 +360,7 @@ import RplCampaignPrimary from '@dpc-sdp/ripple-campaign-primary'
 import RplCampaignSecondary from '@dpc-sdp/ripple-campaign-secondary'
 import TideContentRating from './TideContentRating'
 import AppTopicTags from './AppTopicTags'
+import MenuControl from './MenuControl'
 import { anchorUtils } from '../libs/anchorlinks.js'
 import RplAnchorLinks from '@dpc-sdp/ripple-anchor-links'
 import {
@@ -366,6 +382,18 @@ import RplSiteSectionNavigation from '@dpc-sdp/ripple-site-section-navigation'
 import RplContact from '@dpc-sdp/ripple-contact'
 import RplShareThis from '@dpc-sdp/ripple-share-this'
 
+const otherColours = `--rpl-button-danger-hover-background-color: #c42c35;
+--rpl-pikaday-header-text-color: #475971;
+--rpl-breadcrumbs-link-color: #125ec6;
+--rpl-campaign-secondary-summary-text-color: #132a4a;
+--quotation-author-color: #53647a;
+--rpl-document-link-meta-color: #53647a;
+--rpl-campaign-primary-summary-text-color: #132a4a;
+--rpl-site-header-logout-btn-background-color-mobile: #012557;
+--rpl-document-link-meta-separator-color: #dadee2;
+--callout-wrapper-background-color: #e6f4fd;
+--rpl-section-menu-active-left-bar: url('data:image/svg+xml,%3Csvg%20width%3D%224%22%20height%3D%221%22%20viewBox%3D%220%200%204%201%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%224%22%20height%3D%221%22%20fill%3D%22%230095ec%22%2F%3E%3C%2Fsvg%3E')`
+
 export default {
   name: 'SdpBuilder',
   components: {
@@ -385,6 +413,7 @@ export default {
     RplCampaignSecondary,
     TideContentRating,
     AppTopicTags,
+    MenuControl,
     RplAnchorLinks,
     RplMarkup,
     RplRelatedLinks,
@@ -411,10 +440,7 @@ export default {
       tags: [{ name: 'Tag A', path: { alias: '#' } }, { name: 'Tag B', path: { alias: '#' } }],
       displayHeadings: 'showH2AndH3',
       updatedDate: { date: '2020-01-01T08:00:00' },
-      mainMenu: [{"text":"Your Services","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"About VIC Government","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"News","url":"#"},{"text":"Events","url":"#"},{"text":"Connect with us","url":"#","children":[{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"}]}],
       controls: {
-        show: true,
-        activePanel: 'page-header',
         pageHeader: {
           theme: 'light',
           fileDesktop: '',
@@ -432,28 +458,6 @@ export default {
           showTopicTermsAndTags: true,
           showContentRating: true,
           backgroundColor: 'white',
-          addBodyComponent: 'basic_text',
-          fieldSchemas: {
-            'basic_text': [
-              { name: 'html', type: 'textarea', data: '' }
-            ],
-            'promotion_card': [
-              { name: 'Internal Link', type: 'select', options: ['', 'Demo A', 'Demo B', 'Demo C'], data: '' },
-              { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
-              { name: 'External Link', type: 'input.text', data: '#' },
-              { name: 'Title (for external Link)', type: 'input.text', data: 'Promo title' },
-              { name: 'Summary (for external Link)', type: 'input.text', data: 'Promo summary' },
-              { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
-            ],
-            'navigation_card': [
-              { name: 'Internal Link', type: 'select', options: ['', 'Demo A'], data: '' },
-              { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
-              { name: 'External Link', type: 'input.text', data: '#' },
-              { name: 'Title (for external Link)', type: 'input.text', data: 'Navigation title' },
-              { name: 'Summary (for external Link)', type: 'input.text', data: 'Navigation summary' },
-              { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
-            ],
-          },
           components: [{
             type: 'basic_text',
             fields: [{ name: 'html', type: 'textarea', data: '<h2>Body Content Heading</h2>\n<p>Pariatur dolore elit sunt esse.</p>\n<ul>\n  <li>Aute nulla commodo magna.</li>\n  <li>Deserunt commodo occaecat eu.</li>\n</ul>\n<div class="callout-wrapper"><p>Lorem ipsum dolor sit amet.</p></div>' }]
@@ -512,22 +516,53 @@ export default {
             decorative_gradient_0: 'linear-gradient(0deg, var(--primary) 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
             decorative_gradient_90: 'linear-gradient(-180deg, var(--primary) 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
             decorative_gradient_180: 'linear-gradient(90deg, var(--primary) 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
-            other: `--rpl-button-danger-hover-background-color: #c42c35;
---rpl-pikaday-header-text-color: #475971;
---rpl-breadcrumbs-link-color: #125ec6;
---rpl-campaign-secondary-summary-text-color: #132a4a;
---quotation-author-color: #53647a;
---rpl-document-link-meta-color: #53647a;
---rpl-campaign-primary-summary-text-color: #132a4a;
---rpl-site-header-logout-btn-background-color-mobile: #012557;
---rpl-document-link-meta-separator-color: #dadee2;
---callout-wrapper-background-color: #e6f4fd;
---rpl-section-menu-active-left-bar: url('data:image/svg+xml,%3Csvg%20width%3D%224%22%20height%3D%221%22%20viewBox%3D%220%200%204%201%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%224%22%20height%3D%221%22%20fill%3D%22%230095ec%22%2F%3E%3C%2Fsvg%3E')` }
+            other: otherColours
+          },
+          mainMenu: [{"text":"Your Services","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"About VIC Government","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"News","url":"#"},{"text":"Events","url":"#"},{"text":"Connect with us","url":"#","children":[{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"}]}]
+        }
+      },
+      filemanagement: {
+        show: true,
+        activePanel: 'page-header',
+        configuration: '',
+        addBodyComponent: 'basic_text',
+        fieldSchemas: {
+          'basic_text': [
+            { name: 'html', type: 'textarea', data: '' }
+          ],
+          'promotion_card': [
+            { name: 'Internal Link', type: 'select', options: ['', 'Demo A', 'Demo B', 'Demo C'], data: '' },
+            { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
+            { name: 'External Link', type: 'input.text', data: '#' },
+            { name: 'Title (for external Link)', type: 'input.text', data: 'Promo title' },
+            { name: 'Summary (for external Link)', type: 'input.text', data: 'Promo summary' },
+            { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
+          ],
+          'navigation_card': [
+            { name: 'Internal Link', type: 'select', options: ['', 'Demo A'], data: '' },
+            { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
+            { name: 'External Link', type: 'input.text', data: '#' },
+            { name: 'Title (for external Link)', type: 'input.text', data: 'Navigation title' },
+            { name: 'Summary (for external Link)', type: 'input.text', data: 'Navigation summary' },
+            { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
+          ],
         }
       }
     }
   },
   methods: {
+    exportControls () {
+      this.filemanagement.configuration = JSON.stringify(this.controls, null, 2)
+    },
+    importControls () {
+      try {
+        this.controls = JSON.parse(this.filemanagement.configuration)
+        this.filemanagement.configuration = ''
+        this.updatePalette()
+      } catch (e) {
+        alert(`unable to import: ${e}`)
+      }
+    },
     updatePalette () {
       this.paletteNames.forEach(colour => {
         if (colour !== 'other') {
@@ -556,8 +591,8 @@ export default {
     },
     addBodyComponent () {
       this.controls.bodyContent.components.push({
-        type: this.controls.bodyContent.addBodyComponent,
-        fields: JSON.parse(JSON.stringify(this.controls.bodyContent.fieldSchemas[this.controls.bodyContent.addBodyComponent]))
+        type: this.filemanagement.addBodyComponent,
+        fields: JSON.parse(JSON.stringify(this.filemanagement.fieldSchemas[this.filemanagement.addBodyComponent]))
       })
     },
     deleteBodyComponent (removeIndex) {
@@ -807,7 +842,7 @@ export default {
           component: 'rpl-site-section-navigation',
           order: 100,
           data: {
-            menu: this.mainMenu,
+            menu: this.controls.global.mainMenu,
             title: 'My title',
             activeLink: '/active'
           }
@@ -904,7 +939,7 @@ export default {
     },
     header () {
       return {
-        links: this.mainMenu,
+        links: this.controls.global.mainMenu,
         breakpoint: 992,
         sticky: false,
         hideOnScroll: false,
@@ -914,7 +949,7 @@ export default {
     },
     footer () {
       return {
-        nav: this.mainMenu,
+        nav: this.controls.global.mainMenu,
         links: [{"text":"Privacy","url":"#"},{"text":"Disclaimer","url":"#"},{"text":"Terms of use","url":"#"},{"text":"Sitemap","url":"#"},{"text":"Accessibility Statement","url":"#"},{"text":"Help","url":"#"}],
         copyright: '© Copyright State Government of Victoria',
         acknowledgement: 'The Victorian Government acknowledges Aboriginal and Torres Strait Islander people as the Traditional Custodians of the land and acknowledges and pays respect to their Elders, past and present.',
