@@ -1,268 +1,7 @@
 <template>
-  <div class="page" :class="{ 'page--controls-hidden': !filemanagement.show }">
+  <div class="page" :class="{ 'page--controls-hidden': !isControlVisible }">
     <!-- Controls -->
-    <div class="controls">
-      <button class="controls__toggle" @click="filemanagement.show = !filemanagement.show">{{ filemanagement.show ? 'Hide' : 'Show'}} Toolbar</button>
-      <div v-if="filemanagement.show">
-        <div class="controls__tabs">
-          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'page-header'}" @click="filemanagement.activePanel = 'page-header'">Page Header</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'body-content'}" @click="filemanagement.activePanel = 'body-content'">Body Content</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'header-content'}" @click="filemanagement.activePanel = 'header-content'">Header Content</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'campaigns'}" @click="filemanagement.activePanel = 'campaigns'">Campaigns</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'sidebar'}" @click="filemanagement.activePanel = 'sidebar'">Sidebar</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'global'}" @click="filemanagement.activePanel = 'global'">Global</button>
-          <button class="controls__tab" :class="{ 'controls__tab--active' : filemanagement.activePanel === 'save'}" @click="filemanagement.activePanel = 'save'">Save</button>
-        </div>
-        <div class="controls__panel" v-if="filemanagement.activePanel === 'page-header'">
-          <div class="field">
-            <label>
-              <span>Page title</span>
-              <input type="text" v-model="controls.pageHeader.title" />
-            </label>
-            <label>
-              <span>Introduction text</span>
-              <textarea v-model="controls.pageHeader.introText" />
-            </label>
-            <label>
-              <span>Key journeys (Show Links)</span>
-              <input type="checkbox" v-model="controls.pageHeader.showKeyLinks">
-            </label>
-          </div>
-          <div class="field">
-            <label>
-              <span>Show Breadcrumbs</span>
-              <input type="checkbox" v-model="controls.pageHeader.showCrumbs">
-            </label>
-            <label>
-              <span>Hero Image</span>
-              <input type="file" ref="heroBannerImg" @change="addImage(controls.pageHeader, 'fileDesktop', 'heroBannerImg')" />
-              <button @click="removeImage(controls.pageHeader, 'fileDesktop', 'heroBannerImg')">Remove Image</button>
-            </label>
-            <label>
-              <span>Hero image theme</span>
-              <select v-model="controls.pageHeader.theme">
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-              </select>
-            </label>
-            <label>
-              <span>Show Hero image caption</span>
-              <input type="checkbox" v-model="controls.pageHeader.showHeroImageCaption">
-            </label>
-            <label>
-              <span>Hero Logo</span>
-              <input type="file" ref="heroLogoImg" @change="addImage(controls.pageHeader, 'logo', 'heroLogoImg')" />
-              <button @click="removeImage(controls.pageHeader, 'logo', 'heroLogoImg')">Remove Image</button>
-            </label>
-            <label>
-              <span>Top Graphical Image</span>
-              <input type="file" ref="topGraphicalImg" @change="addImage(controls.pageHeader, 'topGraphic', 'topGraphicalImg')" />
-              <button @click="removeImage(controls.pageHeader, 'topGraphic', 'topGraphicalImg')">Remove Image</button>
-            </label>
-            <label>
-              <span>Bottom Graphical Image</span>
-              <input type="file" ref="bottomGraphicalImg" @change="addImage(controls.pageHeader, 'bottomGraphic', 'bottomGraphicalImg')" />
-              <button @click="removeImage(controls.pageHeader, 'bottomGraphic', 'bottomGraphicalImg')">Remove Image</button>
-            </label>
-          </div>
-        </div>
-        <div class="controls__panel" v-if="filemanagement.activePanel === 'body-content'">
-          <div class="field">
-            <label>
-              <span>Show Table of Content?</span>
-              <input type="checkbox" v-model="controls.bodyContent.showTableOfContents">
-            </label>
-            <label>
-              <span>Show topic term and tags?</span>
-              <input type="checkbox" v-model="controls.bodyContent.showTopicTermsAndTags">
-            </label>
-            <label>
-              <span>Show content rating?</span>
-              <input type="checkbox" v-model="controls.bodyContent.showContentRating">
-            </label>
-            <label>
-              <span>Background colour</span>
-              <select v-model="controls.bodyContent.backgroundColor">
-                <option value="white">White</option>
-                <option value="grey">Grey</option>
-              </select>
-            </label>
-          </div>
-          <div class="field">
-            <label>
-              <span>Add Body Component</span>
-              <select v-model="filemanagement.addBodyComponent">
-                <option value="basic_text">basic_text</option>
-                <option disabled value="accordion">accordion</option>
-                <option disabled value="card_keydates">card_keydates</option>
-                <option disabled value="call_to_action">call_to_action</option>
-                <option disabled value="embedded_webform">embedded_webform</option>
-                <option disabled value="featured_news">featured_news</option>
-                <option disabled value="news_listing">news_listing</option>
-                <option disabled value="media_gallery">media_gallery</option>
-                <option disabled value="card_carousel">card_carousel</option>
-                <option disabled value="latest_events">latest_events</option>
-                <option disabled value="data_driven_component">data_driven_component</option>
-                <option disabled value="daily_update">daily_update</option>
-                <option disabled value="complex_image">complex_image</option>
-                <option disabled value="compact_card_collection">compact_card_collection</option>
-                <option disabled value="timelines">timelines</option>
-                <option disabled value="user_authentication_block">user_authentication_block</option>
-                <option disabled value="data_table">data_table</option>
-                <option disabled value="form_embed_openforms">form_embed_openforms</option>
-                <option value="navigation_card">navigation_card</option>
-                <option value="promotion_card">promotion_card</option>
-              </select>
-            </label>
-            <button @click="addBodyComponent">Add Component</button>
-            <fieldset v-for="(bodyComponent, bci) in controls.bodyContent.components" :key="`fieldset-${bci}`">
-              <legend>{{ bodyComponent.type }}</legend>
-              <div v-for="(bodyComponentField, bcfi) in bodyComponent.fields" :key="`fieldset-${bci}-field-${bcfi}`">
-                <label>
-                  <span>{{ bodyComponentField.name }}</span>
-                  <input v-if="bodyComponentField.type === 'input.text'" type="text" v-model="bodyComponentField.data" />
-                  <input v-if="bodyComponentField.type === 'input.checkbox'" type="checkbox" v-model="bodyComponentField.data" />
-                  <textarea v-if="bodyComponentField.type === 'textarea'" type="text" v-model="bodyComponentField.data"></textarea>
-                  <select v-if="bodyComponentField.type === 'select'" type="checkbox" v-model="bodyComponentField.data">
-                    <option v-for="(options, fieldoptionindex) in bodyComponentField.options" :value="options" :key="`fieldset-${bci}-field-${bcfi}-option-${fieldoptionindex}`">{{ options }}</option>
-                  </select>
-                </label>
-              </div>
-              <button @click="deleteBodyComponent(bci)">Delete Component</button>
-            </fieldset>
-          </div>
-        </div>
-        <div class="controls__panel" v-if="filemanagement.activePanel === 'header-content'">
-          <div class="field">
-            <label>
-              <span>Show Acknowledgement of Country?</span>
-              <input type="checkbox" v-model="controls.headerContent.showAcknowledgement">
-            </label>
-            <label>
-              <span>Show Intro Banner Component</span>
-              <input type="checkbox" v-model="controls.headerContent.showIntroBanner">
-            </label>
-          </div>
-        </div>
-        <div class="controls__panel" v-if="filemanagement.activePanel === 'campaigns'">
-          <div class="field">
-            <fieldset>
-              <legend>Campaign Primary</legend>
-              <label>
-                <span>Show Campaign Primary Block</span>
-                <input type="checkbox" v-model="controls.campaigns.primary.show" />
-              </label>
-              <label>
-                <span>Title</span>
-                <input type="text" v-model="controls.campaigns.primary.title" />
-              </label>
-              <label>
-                <span>Body</span>
-                <input type="text" v-model="controls.campaigns.primary.summary" />
-              </label>
-              <label>
-                <span>CTA Text</span>
-                <input type="text" v-model="controls.campaigns.primary.link.text" />
-              </label>
-              <label>
-                <span>CTA URL</span>
-                <input type="text" v-model="controls.campaigns.primary.link.url" />
-              </label>
-              <label>
-                <span>Featured Image</span>
-                <input type="file" ref="campaignPrimaryImg" @change="addImage(controls.campaigns.primary, 'image', 'campaignPrimaryImg')" />
-                <button @click="removeImage(controls.campaigns.primary, 'image', 'campaignPrimaryImg')">Remove Image</button>
-              </label>
-            </fieldset>
-          </div>
-          <div class="field">
-            <fieldset>
-              <legend>Campaign Secondary</legend>
-              <label>
-                <span>Show Campaign Secondary Block</span>
-                <input type="checkbox" v-model="controls.campaigns.secondary.show" />
-              </label>
-              <label>
-                <span>Title</span>
-                <input type="text" v-model="controls.campaigns.secondary.title" />
-              </label>
-              <label>
-                <span>Body</span>
-                <input type="text" v-model="controls.campaigns.secondary.summary" />
-              </label>
-              <label>
-                <span>CTA Text</span>
-                <input type="text" v-model="controls.campaigns.secondary.link.text" />
-              </label>
-              <label>
-                <span>CTA URL</span>
-                <input type="text" v-model="controls.campaigns.secondary.link.url" />
-              </label>
-              <label>
-                <span>Featured Image</span>
-                <input type="file" ref="campaignSecondaryImg" @change="addImage(controls.campaigns.secondary, 'image', 'campaignSecondaryImg')" />
-                <button @click="removeImage(controls.campaigns.secondary, 'image', 'campaignSecondaryImg')">Remove Image</button>
-              </label>
-            </fieldset>
-          </div>
-        </div>
-        <div class="controls__panel" v-if="filemanagement.activePanel === 'sidebar'">
-          <div class="field">
-            <label>
-              <span>Show Site-section Navigation?</span>
-              <input type="checkbox" v-model="controls.sidebar.showSiteSectionNavigation">
-            </label>
-            <label>
-              <span>Show Related Content?</span>
-              <input type="checkbox" v-model="controls.sidebar.showRelatedContent">
-            </label>
-            <label>
-              <span>Show what's next?</span>
-              <input type="checkbox" v-model="controls.sidebar.showWhatsNext">
-            </label>
-            <label>
-              <span>Show contact details</span>
-              <input type="checkbox" v-model="controls.sidebar.showContactDetails">
-            </label>
-            <label>
-              <span>Show Social Sharing?</span>
-              <input type="checkbox" v-model="controls.sidebar.showSocialSharing">
-            </label>
-          </div>
-        </div>
-        <div class="controls__panel" v-if="filemanagement.activePanel === 'global'">
-          <div class="field">
-            <fieldset>
-              <legend>Colour Palette</legend>
-              <template v-for="(colour, colourIndex) in paletteNames">
-                <label v-if="colour !== 'other'" :key="`palette-names-${colour}`">
-                  <span>{{ colour }}</span>
-                  <input type="text" v-model="controls.global.palette[colour]" @change="updatePalette">
-                </label>
-                <label v-if="colour === 'other'" :key="`palette-names-${colour}`">
-                  <span>Composite colours</span>
-                  <textarea v-model="controls.global.palette.other" @change="updatePalette"></textarea>
-                </label>
-              </template>
-            </fieldset>
-          </div>
-          <div class="field">
-            <label>Main Menu</label>
-            <menu-control :menu="controls.global.mainMenu" />
-          </div>
-        </div>
-        <div class="controls__panel" v-if="filemanagement.activePanel === 'save'">
-          <div class="field">
-            <input type="button" value="Export JSON" @click="exportControls" />
-            <input type="button" value="Import JSON" @click="importControls" />
-            <label>
-              <label>Configuration</label>
-              <textarea v-model="filemanagement.configuration" />
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
+    <controls :controls="controls" @changeVisibility="controlVisibility" />
     <!-- Ripple Base Layout (default.vue) -->
     <rpl-base-layout>
       <template slot="header">
@@ -276,6 +15,8 @@
         :backgroundColor="controls.bodyContent.backgroundColor"
         :heroBackgroundImage="heroBackgroundImage"
         :backgroundGraphic="topGraphic"
+        :quickExit="controls.site.showExitSite"
+        :key="`page-layout-${controls.site.showExitSite}`"
       >
         <template slot="breadcrumbs">
           <rpl-breadcrumbs v-if="controls.pageHeader.showCrumbs" :crumbs="breadcrumbs" />
@@ -345,6 +86,9 @@
 
 <script>
 import Vue from 'vue'
+import Controls from './builder/Controls'
+import controlDefault from './builder/controls.js'
+
 // default.vue
 import { RplAlertBase } from '@dpc-sdp/ripple-alert'
 import { RplPageLayout, RplBaseLayout } from '@dpc-sdp/ripple-layout'
@@ -358,9 +102,8 @@ import RplUpdatedDate from '@dpc-sdp/ripple-updated-date'
 import RplBreadcrumbs from '@dpc-sdp/ripple-breadcrumbs'
 import RplCampaignPrimary from '@dpc-sdp/ripple-campaign-primary'
 import RplCampaignSecondary from '@dpc-sdp/ripple-campaign-secondary'
-import TideContentRating from './TideContentRating'
-import AppTopicTags from './AppTopicTags'
-import MenuControl from './MenuControl'
+import TideContentRating from './tide/TideContentRating'
+import AppTopicTags from './tide/AppTopicTags'
 import { anchorUtils } from '../libs/anchorlinks.js'
 import RplAnchorLinks from '@dpc-sdp/ripple-anchor-links'
 import {
@@ -371,7 +114,6 @@ import {
 import topGraphicSrc from '../assets/img/header-pattern-shape.png'
 import bottomGraphicSrc from '../assets/img/header-pattern-bottom.png'
 import sample from '../assets/img/sample.png'
-import sample699x411 from '../assets/img/sample699x411.png'
 // Body Content
 import { RplMarkup } from '@dpc-sdp/ripple-markup'
 
@@ -382,21 +124,10 @@ import RplSiteSectionNavigation from '@dpc-sdp/ripple-site-section-navigation'
 import RplContact from '@dpc-sdp/ripple-contact'
 import RplShareThis from '@dpc-sdp/ripple-share-this'
 
-const otherColours = `--rpl-button-danger-hover-background-color: #c42c35;
---rpl-pikaday-header-text-color: #475971;
---rpl-breadcrumbs-link-color: #125ec6;
---rpl-campaign-secondary-summary-text-color: #132a4a;
---quotation-author-color: #53647a;
---rpl-document-link-meta-color: #53647a;
---rpl-campaign-primary-summary-text-color: #132a4a;
---rpl-site-header-logout-btn-background-color-mobile: #012557;
---rpl-document-link-meta-separator-color: #dadee2;
---callout-wrapper-background-color: #e6f4fd;
---rpl-section-menu-active-left-bar: url('data:image/svg+xml,%3Csvg%20width%3D%224%22%20height%3D%221%22%20viewBox%3D%220%200%204%201%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%224%22%20height%3D%221%22%20fill%3D%22%230095ec%22%2F%3E%3C%2Fsvg%3E')`
-
 export default {
   name: 'SdpBuilder',
   components: {
+    Controls,
     RplRow,
     RplCol,
     RplAlertBase,
@@ -413,7 +144,6 @@ export default {
     RplCampaignSecondary,
     TideContentRating,
     AppTopicTags,
-    MenuControl,
     RplAnchorLinks,
     RplMarkup,
     RplRelatedLinks,
@@ -427,6 +157,7 @@ export default {
   data () {
     return {
       publicPath: process.env.BASE_URL,
+      isControlVisible: true,
       cardColsSetting: {
         wide: { m: 6, l: 4, xxxl: 3 },
         narrow: { m: 6, xxxl: 4 }
@@ -440,164 +171,10 @@ export default {
       tags: [{ name: 'Tag A', path: { alias: '#' } }, { name: 'Tag B', path: { alias: '#' } }],
       displayHeadings: 'showH2AndH3',
       updatedDate: { date: '2020-01-01T08:00:00' },
-      controls: {
-        pageHeader: {
-          theme: 'light',
-          fileDesktop: '',
-          showKeyLinks: false,
-          showCrumbs: true,
-          title: 'Landing Page',
-          introText: 'Aliqua reprehenderit laborum ad consequat proident aliquip est consectetur aute ut dolor esse proident et enim ad.',
-          showHeroImageCaption: false,
-          topGraphic: null,
-          bottomGraphic: null,
-          logo: null
-        },
-        bodyContent: {
-          showTableOfContents: true,
-          showTopicTermsAndTags: true,
-          showContentRating: true,
-          backgroundColor: 'white',
-          components: [{
-            type: 'basic_text',
-            fields: [{ name: 'html', type: 'textarea', data: '<h2>Body Content Heading</h2>\n<p>Pariatur dolore elit sunt esse.</p>\n<ul>\n  <li>Aute nulla commodo magna.</li>\n  <li>Deserunt commodo occaecat eu.</li>\n</ul>\n<div class="callout-wrapper"><p>Lorem ipsum dolor sit amet.</p></div>' }]
-          }]
-        },
-        headerContent: {
-          showAcknowledgement: false,
-          showIntroBanner: false
-        },
-        campaigns: {
-          primary: {
-            show: true,
-            title: 'Campaign Primary Title',
-            summary: 'And campaign summary',
-            link: { text: 'Read more', url: '#' },
-            video: null,
-            image: sample699x411
-          },
-          secondary: {
-            show: true,
-            title: 'Campaign Secondary Title',
-            summary: 'And campaign summary',
-            link: { text: 'See more', url: '#' },
-            video: null,
-            image: sample
-          }
-        },
-        sidebar: {
-          show: true,
-          showSiteSectionNavigation: false,
-          showRelatedContent: false,
-          showWhatsNext: false,
-          showContactDetails: false,
-          showSocialSharing: true
-        },
-        global: {
-          palette: {
-            primary: '#0052c2',
-            dark_primary: '#023b89',
-            secondary: '#0095ec',
-            extra_dark_neutral: '#011a3c',
-            dark_neutral: '#465870',
-            dark_neutral_1: '#546a7c',
-            mid_neutral_1: '#d7dbe0',
-            mid_neutral_2: '#e8ebee',
-            light_neutral: '#f6f6f9',
-            danger: '#af272f',
-            warning: '#ca4c21',
-            success: '#027a83',
-            white: '#fff',
-            black: '#000',
-            primary_gradient: 'linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%)',
-            primary_gradient_90: 'linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%)',
-            primary_gradient_0: 'linear-gradient(0deg, var(--primary) 0%, var(--secondary) 100%)',
-            decorative_gradient: 'linear-gradient(-90deg, var(--primary) 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
-            decorative_gradient_0: 'linear-gradient(0deg, var(--primary) 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
-            decorative_gradient_90: 'linear-gradient(-180deg, var(--primary) 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
-            decorative_gradient_180: 'linear-gradient(90deg, var(--primary) 0%, #825dff 12%, #ef4a81 23%, #e57200 37%, #ffc166 51%, #f9e062 81%)',
-            other: otherColours
-          },
-          mainMenu: [{"text":"Your Services","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"About VIC Government","url":"#","children":[{"text":"Grants awards and assistance","url":"#"},{"text":"Law and safety","url":"#"},{"text":"Business and Industry","url":"#"},{"text":"Jobs and the Workplace","url":"#"},{"text":"Transport and Traffic","url":"#"},{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"},{"text":"Community","url":"#"},{"text":"Art, Culture and Sport","url":"#"},{"text":"Environment and Water","url":"#"}]},{"text":"News","url":"#"},{"text":"Events","url":"#"},{"text":"Connect with us","url":"#","children":[{"text":"Education","url":"#"},{"text":"Housing and Property","url":"#"},{"text":"Health","url":"#"}]}]
-        }
-      },
-      filemanagement: {
-        show: true,
-        activePanel: 'page-header',
-        configuration: '',
-        addBodyComponent: 'basic_text',
-        fieldSchemas: {
-          'basic_text': [
-            { name: 'html', type: 'textarea', data: '' }
-          ],
-          'promotion_card': [
-            { name: 'Internal Link', type: 'select', options: ['', 'Demo A', 'Demo B', 'Demo C'], data: '' },
-            { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
-            { name: 'External Link', type: 'input.text', data: '#' },
-            { name: 'Title (for external Link)', type: 'input.text', data: 'Promo title' },
-            { name: 'Summary (for external Link)', type: 'input.text', data: 'Promo summary' },
-            { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
-          ],
-          'navigation_card': [
-            { name: 'Internal Link', type: 'select', options: ['', 'Demo A'], data: '' },
-            { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
-            { name: 'External Link', type: 'input.text', data: '#' },
-            { name: 'Title (for external Link)', type: 'input.text', data: 'Navigation title' },
-            { name: 'Summary (for external Link)', type: 'input.text', data: 'Navigation summary' },
-            { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
-          ],
-        }
-      }
+      controls: controlDefault
     }
   },
   methods: {
-    exportControls () {
-      this.filemanagement.configuration = JSON.stringify(this.controls, null, 2)
-    },
-    importControls () {
-      try {
-        this.controls = JSON.parse(this.filemanagement.configuration)
-        this.filemanagement.configuration = ''
-        this.updatePalette()
-      } catch (e) {
-        alert(`unable to import: ${e}`)
-      }
-    },
-    updatePalette () {
-      this.paletteNames.forEach(colour => {
-        if (colour !== 'other') {
-          document.documentElement.style.setProperty(`--${colour}`, this.controls.global.palette[colour])
-        }
-      })
-      const extra = this.controls.global.palette.other
-      const lines = extra.split('\n')
-      lines.forEach(line => {
-        const x = line.split(': ')
-        const key = x[0]
-        const value = x[1].replace(';', '')
-        document.documentElement.style.setProperty(key, value)
-      })
-    },
-    addImage (obj, key, ref) {
-      if (this.$refs[ref].files && this.$refs[ref].files.length > 0) {
-        var fileReaderDesktop = new FileReader()
-        fileReaderDesktop.onload = () => { Vue.set(obj, key, fileReaderDesktop.result) }
-        fileReaderDesktop.readAsDataURL(this.$refs[ref].files[0])
-      }
-    },
-    removeImage (obj, key, ref) {
-      Vue.set(obj, key, '')
-      this.$refs[ref].value = null
-    },
-    addBodyComponent () {
-      this.controls.bodyContent.components.push({
-        type: this.filemanagement.addBodyComponent,
-        fields: JSON.parse(JSON.stringify(this.filemanagement.fieldSchemas[this.filemanagement.addBodyComponent]))
-      })
-    },
-    deleteBodyComponent (removeIndex) {
-      this.controls.bodyContent.components.splice(removeIndex, 1)
-    },
     getCols (cols) {
       if (cols) {
         if (this.hasSidebar && cols.narrow) {
@@ -635,12 +212,12 @@ export default {
       } else {
         return false
       }
+    },
+    controlVisibility (isVisible) {
+      this.isControlVisible = isVisible
     }
   },
   computed: {
-    paletteNames () {
-      return Object.keys(this.controls.global.palette)
-    },
     heroBannerData () {
       return {
         title: this.controls.pageHeader.title,
@@ -842,7 +419,7 @@ export default {
           component: 'rpl-site-section-navigation',
           order: 100,
           data: {
-            menu: this.controls.global.mainMenu,
+            menu: this.controls.site.mainMenu,
             title: 'My title',
             activeLink: '/active'
           }
@@ -939,7 +516,7 @@ export default {
     },
     header () {
       return {
-        links: this.controls.global.mainMenu,
+        links: this.controls.site.mainMenu,
         breakpoint: 992,
         sticky: false,
         hideOnScroll: false,
@@ -949,10 +526,10 @@ export default {
     },
     footer () {
       return {
-        nav: this.controls.global.mainMenu,
-        links: [{"text":"Privacy","url":"#"},{"text":"Disclaimer","url":"#"},{"text":"Terms of use","url":"#"},{"text":"Sitemap","url":"#"},{"text":"Accessibility Statement","url":"#"},{"text":"Help","url":"#"}],
-        copyright: '© Copyright State Government of Victoria',
-        acknowledgement: 'The Victorian Government acknowledges Aboriginal and Torres Strait Islander people as the Traditional Custodians of the land and acknowledges and pays respect to their Elders, past and present.',
+        nav: this.controls.site.mainMenu,
+        links: this.controls.site.footerMenu,
+        copyright: this.controls.site.footerText,
+        acknowledgement: this.controls.site.acknowledgementToCountry,
         caption: this.controls.pageHeader.showHeroImageCaption ? 'Image credit: This caption is used to describe the image in the hero banner above.' : null,
         logos: [{"src":"https://via.placeholder.com/112x52","alt":"Max native size","url":"#"},{"src":"https://via.placeholder.com/32x32","alt":"Smaller than max size","url":"#"},{"src":"https://via.placeholder.com/80x200","alt":"Portrait","url":"#"},{"src":"https://via.placeholder.com/200x80","alt":"Landscape","url":"#"}]
       }
@@ -962,95 +539,11 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~@dpc-sdp/ripple-global/scss/settings';
-@import '~@dpc-sdp/ripple-global/scss/tools';
-
 .page {
   padding-bottom: 400px;
 
   &--controls-hidden {
     padding-bottom: 0;
-  }
-}
-
-.controls {
-  overflow: scroll;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0,0,0, 0.9);
-  color: white;
-  height: 400px;
-  box-sizing: border-box;
-  z-index: 10000;
-
-  .page--controls-hidden & {
-    height: auto;
-    text-align: right;
-    background-color: transparent;
-    overflow: auto;
-  }
-
-  &__tabs {
-    @include rpl-breakpoint('m') {
-      display: flex;
-    }
-  }
-
-  &__tab {
-    border: 0;
-    background-color: white;
-
-    &--active {
-      background-color: lime;
-    }
-  }
-
-  &__panel {
-    padding: 10px;
-
-    @include rpl-breakpoint('m') {
-      display: flex;
-    }
-  }
-
-  label {
-    margin-bottom: 4px;
-    display: block;
-
-    span {
-      display: block;
-    }
-  }
-
-  .field {
-    width: 100%;
-    padding: 0 4px;
-    @include rpl-breakpoint('m') {
-      width: 33.33%;
-    }
-
-    input {
-      max-width: 200px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 100px;
-      box-sizing: border-box;
-      white-space: pre;
-    }
-  }
-
-  &__toggle {
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    .page--controls-hidden & {
-      position: relative;
-    }
   }
 }
 </style>
