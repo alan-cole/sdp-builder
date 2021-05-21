@@ -285,6 +285,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import MenuControl from './MenuControl'
 
 export default {
