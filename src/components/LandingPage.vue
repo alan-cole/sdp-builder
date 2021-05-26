@@ -116,6 +116,7 @@ import bottomGraphicSrc from '../assets/img/header-pattern-bottom.png'
 import sample from '../assets/img/sample.png'
 // Body Content
 import { RplMarkup } from '@dpc-sdp/ripple-markup'
+import RplDataTable from '@dpc-sdp/ripple-data-table'
 
 // Sidebar
 import RplRelatedLinks from '@dpc-sdp/ripple-related-links'
@@ -146,6 +147,7 @@ export default {
     AppTopicTags,
     RplAnchorLinks,
     RplMarkup,
+    RplDataTable,
     RplRelatedLinks,
     RplWhatsNext,
     RplSiteSectionNavigation,
@@ -406,6 +408,28 @@ export default {
             class: [],
             // ssr: true,
             id: `bodycomp-${idx}`
+          }
+        } else if (comp.type === 'data_table') {
+          const data = {}
+          const isRowOriented = comp.fields[0].data
+          const isFirstRowHeader = comp.fields[1].data
+          const isFirstColHeader = comp.fields[2].data
+          const items = comp.fields[3].data
+          data.isRowOriented = isRowOriented
+          data.isFirstRowHeader = isFirstRowHeader
+          data.isFirstColHeader = isFirstColHeader
+          data.items = items.length > 0 ? items.split('\n').map(row => row.split(',')) : [] // TODO - improve CSV
+          console.log(data)
+          rtn = {
+            name: 'rpl-data-table',
+            component: 'rpl-data-table',
+            data: {
+              ...data
+            },
+            childCols: null,
+            class: [],
+            // ssr: true,
+            id: `bodycomp-${idx}-${Math.random()}`
           }
         }
         return rtn

@@ -107,7 +107,7 @@
               <option disabled value="compact_card_collection">compact_card_collection</option>
               <option disabled value="timelines">timelines</option>
               <option disabled value="user_authentication_block">user_authentication_block</option>
-              <option disabled value="data_table">data_table</option>
+              <option value="data_table">data_table</option>
               <option disabled value="form_embed_openforms">form_embed_openforms</option>
               <option value="navigation_card">navigation_card</option>
               <option value="promotion_card">promotion_card</option>
@@ -322,6 +322,12 @@ export default {
           { name: 'Summary (for external Link)', type: 'input.text', data: 'Navigation summary' },
           { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'noImage' }
         ],
+        'data_table': [
+          { name: 'Table orientation on mobile (enable to use Row, disable for Column)', type: 'input.checkbox', data: true },
+          { name: 'Use first column as table header', type: 'input.checkbox', data: false },
+          { name: 'Use first row as table header', type: 'input.checkbox', data: false },
+          { name: 'Data table content (as simple CSV)', type: 'textarea', data: '#,Town,Count\n1,Melbourne,233' }
+        ]
       }
     }
   },
