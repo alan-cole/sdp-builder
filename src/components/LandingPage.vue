@@ -419,7 +419,6 @@ export default {
           data.isFirstRowHeader = isFirstRowHeader
           data.isFirstColHeader = isFirstColHeader
           data.items = items.length > 0 ? items.split('\n').map(row => row.split(',')) : [] // TODO - improve CSV
-          console.log(data)
           rtn = {
             name: 'rpl-data-table',
             component: 'rpl-data-table',
