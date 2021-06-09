@@ -4,21 +4,7 @@
     <div v-for="(menuItem, menuIdx) in menu">
       <fieldset>
         <legend>Link</legend>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <span>Text</span>
-                <input type="text" v-model="menuItem.text">
-              </td>
-              <td>
-                <span>url</span>
-                <input type="text" v-model="menuItem.url">
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button @click="removeLink(menu, menuIdx)">Remove Link</button>
+        <link-field :link="menuItem" :show-remove="true" @onRemove="removeLink(menu, menuIdx)" />
         <button v-if="menuItem.children" @click="removeAllChildren(menuItem)">Remove All Children</button>
         <button v-if="!menuItem.children" @click="addChildren(menuItem)">Add Children</button>
         <fieldset v-if="menuItem.children">
@@ -32,9 +18,13 @@
 
 <script>
 import Vue from 'vue'
+import LinkField from './LinkField'
 
 export default {
   name: 'MenuControl',
+  components: {
+    LinkField
+  },
   props: {
     menu: Array
   },

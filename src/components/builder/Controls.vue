@@ -92,7 +92,7 @@
             <span>Add Body Component</span>
             <select v-model="bodyComponentToAdd">
               <option value="basic_text">basic_text</option>
-              <option disabled value="accordion">accordion</option>
+              <option value="accordion">accordion</option>
               <option disabled value="card_keydates">card_keydates</option>
               <option disabled value="call_to_action">call_to_action</option>
               <option disabled value="embedded_webform">embedded_webform</option>
@@ -118,13 +118,24 @@
             <legend>{{ bodyComponent.type }}</legend>
             <div v-for="(bodyComponentField, bcfi) in bodyComponent.fields" :key="`fieldset-${bci}-field-${bcfi}`">
               <label>
-                <span>{{ bodyComponentField.name }}</span>
+                <span>{{ bodyComponentField.displayName }}</span>
                 <input v-if="bodyComponentField.type === 'input.text'" type="text" v-model="bodyComponentField.data" />
                 <input v-if="bodyComponentField.type === 'input.checkbox'" type="checkbox" v-model="bodyComponentField.data" />
-                <textarea v-if="bodyComponentField.type === 'textarea'" type="text" v-model="bodyComponentField.data"></textarea>
+                <textarea v-if="bodyComponentField.type === 'textarea'" v-model="bodyComponentField.data"></textarea>
                 <select v-if="bodyComponentField.type === 'select'" type="checkbox" v-model="bodyComponentField.data">
                   <option v-for="(options, fieldoptionindex) in bodyComponentField.options" :value="options" :key="`fieldset-${bci}-field-${bcfi}-option-${fieldoptionindex}`">{{ options }}</option>
                 </select>
+                <div v-if="bodyComponentField.type === 'list'">
+                  <div v-for="(listFieldData, lfd) in bodyComponentField.data" :key="`fieldset-${bci}-listfielddata-${lfd}`">
+                    <div v-for="(listField, lfi) in bodyComponentField.fields" :key="`fieldset-${bci}-listfielddata-${lfd}-listfield-${lfi}`">
+                      <span>{{ listField.displayName }}</span>
+                      <input v-if="listField.type === 'input.text'" type="text" v-model="listFieldData[listField.name]" />
+                      <textarea v-if="listField.type === 'textarea'" v-model="listFieldData[listField.name]"></textarea>
+                    </div>
+                  </div>
+                  <button @click="bodyComponentField.data.push({})">Add Item</button>
+                  <button @click="bodyComponentField.data.pop()">Remove Last Item</button>
+                </div>
               </label>
             </div>
             <button @click="deleteBodyComponent(bci)">Delete Component</button>
@@ -160,12 +171,8 @@
               <input type="text" v-model="controls.campaigns.primary.summary" />
             </label>
             <label>
-              <span>CTA Text</span>
-              <input type="text" v-model="controls.campaigns.primary.link.text" />
-            </label>
-            <label>
-              <span>CTA URL</span>
-              <input type="text" v-model="controls.campaigns.primary.link.url" />
+              <span>CTA</span>
+              <link-field :link="controls.campaigns.primary.link"/>
             </label>
             <label>
               <span>Featured Image</span>
@@ -190,12 +197,8 @@
               <input type="text" v-model="controls.campaigns.secondary.summary" />
             </label>
             <label>
-              <span>CTA Text</span>
-              <input type="text" v-model="controls.campaigns.secondary.link.text" />
-            </label>
-            <label>
-              <span>CTA URL</span>
-              <input type="text" v-model="controls.campaigns.secondary.link.url" />
+              <span>CTA</span>
+              <link-field :link="controls.campaigns.secondary.link"/>
             </label>
             <label>
               <span>Featured Image</span>
@@ -287,11 +290,13 @@
 <script>
 import Vue from 'vue'
 import MenuControl from './MenuControl'
+import LinkField from './LinkField'
 
 export default {
   name: 'Controls',
   components: {
     MenuControl,
+    LinkField
   },
   props: {
     controls: Object
@@ -304,29 +309,37 @@ export default {
       bodyComponentToAdd: 'basic_text',
       fieldSchemas: {
         'basic_text': [
-          { name: 'html', type: 'textarea', data: '' }
+          { displayName: 'HTML', name: 'html', type: 'textarea', data: '' }
+        ],
+        'accordion': [
+          { displayName: 'Title', name: 'title', type: 'input.text', data: 'Accordion' },
+          { displayName: 'Style', name: 'type', type: 'select', options: [ 'standard', 'numbered' ], data: 'standard' },
+          { displayName: 'Accordion items', name: 'accordions', type: 'list', fields: [
+            { displayName: 'Item title', name: 'title', type: 'input.text' },
+            { displayName: 'Item content', name: 'content', type: 'textarea' }
+          ], data: [] }
         ],
         'promotion_card': [
-          { name: 'Internal Link', type: 'select', options: ['', 'Demo A', 'Demo B', 'Demo C'], data: '' },
-          { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
-          { name: 'External Link', type: 'input.text', data: '#' },
-          { name: 'Title (for external Link)', type: 'input.text', data: 'Promo title' },
-          { name: 'Summary (for external Link)', type: 'input.text', data: 'Promo summary' },
-          { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
+          { displayName: 'Internal Link', type: 'select', options: ['', 'Demo A', 'Demo B', 'Demo C'], data: '' },
+          { displayName: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
+          { displayName: 'External Link', type: 'input.text', data: '#' },
+          { displayName: 'Title (for external Link)', type: 'input.text', data: 'Promo title' },
+          { displayName: 'Summary (for external Link)', type: 'input.text', data: 'Promo summary' },
+          { displayName: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'thumbnail' }
         ],
         'navigation_card': [
-          { name: 'Internal Link', type: 'select', options: ['', 'Demo A'], data: '' },
-          { name: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
-          { name: 'External Link', type: 'input.text', data: '#' },
-          { name: 'Title (for external Link)', type: 'input.text', data: 'Navigation title' },
-          { name: 'Summary (for external Link)', type: 'input.text', data: 'Navigation summary' },
-          { name: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'noImage' }
+          { displayName: 'Internal Link', type: 'select', options: ['', 'Demo A'], data: '' },
+          { displayName: 'Show supplemental info (for internal Link)', type: 'input.checkbox', data: true },
+          { displayName: 'External Link', type: 'input.text', data: '#' },
+          { displayName: 'Title (for external Link)', type: 'input.text', data: 'Navigation title' },
+          { displayName: 'Summary (for external Link)', type: 'input.text', data: 'Navigation summary' },
+          { displayName: 'Card Display Style', type: 'select', options: ['noImage', 'thumbnail', 'profile'], data: 'noImage' }
         ],
         'data_table': [
-          { name: 'Table orientation on mobile (enable to use Row, disable for Column)', type: 'input.checkbox', data: true },
-          { name: 'Use first column as table header', type: 'input.checkbox', data: false },
-          { name: 'Use first row as table header', type: 'input.checkbox', data: false },
-          { name: 'Data table content (as simple CSV)', type: 'textarea', data: '#,Town,Count\n1,Melbourne,233' }
+          { displayName: 'Table orientation on mobile (enable to use Row, disable for Column)', name: 'isRowOriented', type: 'input.checkbox', data: true },
+          { displayName: 'Use first column as table header', type: 'input.checkbox', name: 'isFirstRowHeader', data: false },
+          { displayName: 'Use first row as table header', type: 'input.checkbox', name: 'isFirstColHeader', data: false },
+          { displayName: 'Data table content (as simple CSV)', type: 'textarea', name: 'items', data: '#,Town,Count\n1,Melbourne,233' }
         ]
       }
     }
@@ -453,6 +466,7 @@ export default {
   .field {
     width: 100%;
     padding: 0 4px;
+
     @include rpl-breakpoint('m') {
       width: 33.33%;
     }

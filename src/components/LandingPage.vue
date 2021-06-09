@@ -88,6 +88,7 @@
 import Vue from 'vue'
 import Controls from './builder/Controls'
 import controlDefault from './builder/controls.js'
+import { getAnchorLinkName } from '@dpc-sdp/ripple-global/utils/helpers.js'
 
 // default.vue
 import { RplAlertBase } from '@dpc-sdp/ripple-alert'
@@ -116,6 +117,7 @@ import bottomGraphicSrc from '../assets/img/header-pattern-bottom.png'
 import sample from '../assets/img/sample.png'
 // Body Content
 import { RplMarkup } from '@dpc-sdp/ripple-markup'
+import RplAccordion from '@dpc-sdp/ripple-accordion'
 import RplDataTable from '@dpc-sdp/ripple-data-table'
 
 // Sidebar
@@ -154,7 +156,8 @@ export default {
     RplContact,
     RplShareThis,
     RplCardPromo,
-    RplCardNav
+    RplCardNav,
+    RplAccordion
   },
   data () {
     return {
@@ -311,6 +314,24 @@ export default {
             // ssr: true,
             id: `bodycomp-${idx}`
           }
+        } else if (comp.type === 'accordion') {
+          const data = {}
+          comp.fields.forEach(field => {
+            data[field.name] = field.data
+          })
+          rtn = {
+            name: 'rpl-accordion',
+            component: 'rpl-accordion',
+            data: {
+              ...data,
+              childColsBp: null
+            },
+            childCols: null,
+            class: [],
+            cols: null,
+            // ssr: true,
+            id: `bodycomp-${idx}`
+          }
         } else if (comp.type === 'promotion_card') {
           const data = {}
           const fieldIntLink = comp.fields[0].data
@@ -411,14 +432,10 @@ export default {
           }
         } else if (comp.type === 'data_table') {
           const data = {}
-          const isRowOriented = comp.fields[0].data
-          const isFirstRowHeader = comp.fields[1].data
-          const isFirstColHeader = comp.fields[2].data
-          const items = comp.fields[3].data
-          data.isRowOriented = isRowOriented
-          data.isFirstRowHeader = isFirstRowHeader
-          data.isFirstColHeader = isFirstColHeader
-          data.items = items.length > 0 ? items.split('\n').map(row => row.split(',')) : [] // TODO - improve CSV
+          comp.fields.forEach(field => {
+            data[field.name] = field.data
+          })
+          data.items = data.items.length > 0 ? data.items.split('\n').map(row => row.split(',')) : [] // TODO - improve CSV
           rtn = {
             name: 'rpl-data-table',
             component: 'rpl-data-table',
