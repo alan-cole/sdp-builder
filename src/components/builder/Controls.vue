@@ -94,7 +94,7 @@
               <option value="basic_text">basic_text</option>
               <option value="accordion">accordion</option>
               <option disabled value="card_keydates">card_keydates</option>
-              <option disabled value="call_to_action">call_to_action</option>
+              <option value="call_to_action">call_to_action</option>
               <option disabled value="embedded_webform">embedded_webform</option>
               <option disabled value="featured_news">featured_news</option>
               <option disabled value="news_listing">news_listing</option>
@@ -125,6 +125,8 @@
                 <select v-if="bodyComponentField.type === 'select'" type="checkbox" v-model="bodyComponentField.data">
                   <option v-for="(options, fieldoptionindex) in bodyComponentField.options" :value="options" :key="`fieldset-${bci}-field-${bcfi}-option-${fieldoptionindex}`">{{ options }}</option>
                 </select>
+                <image-field v-if="bodyComponentField.type === 'image'" :image="bodyComponentField.data" />
+                <link-field v-if="bodyComponentField.type === 'link'" :link="bodyComponentField.data" />
                 <div v-if="bodyComponentField.type === 'list'">
                   <div v-for="(listFieldData, lfd) in bodyComponentField.data" :key="`fieldset-${bci}-listfielddata-${lfd}`">
                     <div v-for="(listField, lfi) in bodyComponentField.fields" :key="`fieldset-${bci}-listfielddata-${lfd}-listfield-${lfi}`">
@@ -291,12 +293,14 @@
 import Vue from 'vue'
 import MenuControl from './MenuControl'
 import LinkField from './LinkField'
+import ImageField from './ImageField'
 
 export default {
   name: 'Controls',
   components: {
     MenuControl,
-    LinkField
+    LinkField,
+    ImageField
   },
   props: {
     controls: Object
@@ -318,6 +322,13 @@ export default {
             { displayName: 'Item title', name: 'title', type: 'input.text' },
             { displayName: 'Item content', name: 'content', type: 'textarea' }
           ], data: [] }
+        ],
+        'call_to_action': [
+          { displayName: 'Title', name: 'title', type: 'input.text', data: '' },
+          { displayName: 'Description', name: 'summary', type: 'textarea', data: '' },
+          { displayName: 'Feature Image', name: 'image', type: 'image', data: { src: '' } },
+          { displayName: 'CTA', name: 'link', type: 'link', data: { text: '', url: '#' } },
+          { displayName: 'Style', name: 'style', type: 'select', options: [ 'banner', 'card' ], data: 'banner' }
         ],
         'promotion_card': [
           { displayName: 'Internal Link', type: 'select', options: ['', 'Demo A', 'Demo B', 'Demo C'], data: '' },

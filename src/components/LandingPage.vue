@@ -110,6 +110,7 @@ import RplAnchorLinks from '@dpc-sdp/ripple-anchor-links'
 import {
   RplCardPromo,
   RplCardNav,
+  RplCardCta
 } from '@dpc-sdp/ripple-card'
 // Custom
 import topGraphicSrc from '../assets/img/header-pattern-shape.png'
@@ -118,6 +119,7 @@ import sample from '../assets/img/sample.png'
 // Body Content
 import { RplMarkup } from '@dpc-sdp/ripple-markup'
 import RplAccordion from '@dpc-sdp/ripple-accordion'
+import RplCallToAction from '@dpc-sdp/ripple-call-to-action'
 import RplDataTable from '@dpc-sdp/ripple-data-table'
 
 // Sidebar
@@ -157,7 +159,9 @@ export default {
     RplShareThis,
     RplCardPromo,
     RplCardNav,
-    RplAccordion
+    RplCardCta,
+    RplAccordion,
+    RplCallToAction
   },
   data () {
     return {
@@ -191,6 +195,18 @@ export default {
         return cols
       }
       return null
+    },
+    getClass (compClass) {
+      if (compClass) {
+        if (this.hasSidebar && compClass.narrow) {
+          return compClass.narrow
+        }
+        if (compClass.wide) {
+          return compClass.wide
+        }
+        return compClass
+      }
+      return []
     },
     getCampaignDataFromControl (campaignControl) {
       if (campaignControl.show) {
@@ -329,6 +345,39 @@ export default {
             childCols: null,
             class: [],
             cols: null,
+            // ssr: true,
+            id: `bodycomp-${idx}`
+          }
+        } else if (comp.type === 'call_to_action') {
+          const data = {}
+          comp.fields.forEach(field => {
+            data[field.name] = field.data
+          })
+          let componentTag = ''
+          let componentClass = null
+          let componentCols = null
+          if (data.style === 'banner') {
+            componentTag = 'rpl-call-to-action'
+            componentClass = this.getClass({
+              wide: ['rpl-call-to-action--without-sidebar'],
+              narrow: ['rpl-call-to-action--with-sidebar']
+            })
+            componentCols = null
+          } else if (data.style === 'card') {
+            componentTag = 'rpl-card-cta'
+            componentCols = this.getCols(this.cardColsSetting)
+            componentClass = null
+          }
+          rtn = {
+            name: componentTag,
+            component: componentTag,
+            data: {
+              ...data,
+              childColsBp: null
+            },
+            childCols: null,
+            class: componentClass,
+            cols: componentCols,
             // ssr: true,
             id: `bodycomp-${idx}`
           }
